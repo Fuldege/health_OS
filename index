@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jing Health OS</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+<h1>🌱 Jing Health OS</h1>
+
+<p>Body · Health · Beauty</p>
+
+</header>
+
+
+
+<main>
+
+
+<!-- 首页 -->
+
+<section id="dashboard" class="page active">
+
+
+<div class="card hero">
+
+<h2>今日状态</h2>
+
+<div class="big-number">
+
+67.8 kg
+
+</div>
+
+<p>
+目标：60 kg
+</p>
+
+</div>
+
+
+
+<div class="grid">
+
+
+<div class="card">
+
+<h3>😴 睡眠</h3>
+
+<p id="sleepValue">
+-- h
+</p>
+
+<p>
+深睡 --
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>🍦 食欲</h3>
+
+<p id="sweetValue">
+
+-- /10
+
+</p>
+
+<p>
+甜食冲动
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>💩 肠道</h3>
+
+<p>
+
+--
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>🏃运动</h3>
+
+<p>
+
+--
+
+</p>
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+<h3>AI Health Coach</h3>
+
+<p id="aiText">
+
+等待数据...
+
+</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- Daily记录 -->
+
+
+<section id="daily" class="page">
+
+
+<div class="card">
+
+<h2>
+✏️ 今日记录
+</h2>
+
+
+
+<label>
+体重 kg
+</label>
+
+<input id="weight"
+type="number"
+placeholder="67.8">
+
+
+
+<label>
+睡眠小时
+</label>
+
+<input id="sleep"
+type="number"
+step="0.1"
+placeholder="7.5">
+
+
+
+<label>
+深睡分钟
+</label>
+
+<input id="deepSleep"
+type="number"
+placeholder="60">
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+🍦 甜食欲望
+</h3>
+
+
+<label>
+上午
+</label>
+
+<input id="sweetAM"
+type="range"
+min="0"
+max="10"
+value="5">
+
+
+<label>
+下午
+</label>
+
+<input id="sweetPM"
+type="range"
+min="0"
+max="10"
+value="5">
+
+
+<label>
+晚上
+</label>
+
+<input id="sweetNight"
+type="range"
+min="0"
+max="10"
+value="5">
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+原因
+</h3>
+
+
+<div class="buttons">
+
+
+<button>
+压力
+</button>
+
+
+<button>
+疲劳
+</button>
+
+
+<button>
+真的饿
+</button>
+
+
+<button>
+奖励自己
+</button>
+
+
+<button>
+看到别人吃
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+便秘情况
+</h3>
+
+
+<select id="constipation">
+
+
+<option>
+正常
+</option>
+
+
+<option>
+困难
+</option>
+
+
+<option>
+两天以上
+</option>
+
+
+<option>
+严重
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<textarea
+id="note"
+placeholder="今天有什么特别的事情？">
+</textarea>
+
+
+
+<button
+class="save"
+onclick="saveDaily()">
+
+✨ 保存今日记录
+
+</button>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- 趋势 -->
+
+
+<section id="trend" class="page">
+
+
+<div class="card">
+
+<h2>
+📈 趋势
+</h2>
+
+
+<canvas id="weightChart">
+
+</canvas>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<!-- Beauty -->
+
+
+<section id="beauty" class="page">
+
+
+<div class="card">
+
+
+<h2>
+✨ Beauty
+</h2>
+
+
+<label>
+头发状态 0-10
+</label>
+
+<input
+type="range"
+min="0"
+max="10">
+
+
+<label>
+头油程度
+</label>
+
+<input
+type="range"
+min="0"
+max="10">
+
+
+
+<label>
+下巴痘
+</label>
+
+<input
+type="range"
+min="0"
+max="10">
+
+
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+购物记录
+
+</h3>
+
+
+<input placeholder="买了什么">
+
+<input placeholder="价格">
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- Private -->
+
+
+<section id="private" class="page">
+
+
+<div class="card">
+
+
+<h2>
+🔒 Private Health
+</h2>
+
+
+<p>
+医疗信息隐藏区域
+</p>
+
+
+<button onclick="showMedical()">
+
+进入
+
+</button>
+
+
+</div>
+
+
+
+<div id="medicalBox"
+class="card hidden">
+
+
+<h3>
+Hormone Health
+</h3>
+
+
+<p>
+
+周期状态：
+
+长期无自然月经
+
+</p>
+
+
+
+<h3>
+
+Medication
+
+</h3>
+
+
+<p>
+
+Private Log
+
+</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+<nav>
+
+
+<button onclick="showPage('dashboard')">
+🏠
+</button>
+
+
+<button onclick="showPage('daily')">
+✏️
+</button>
+
+
+<button onclick="showPage('trend')">
+📈
+</button>
+
+
+<button onclick="showPage('beauty')">
+✨
+</button>
+
+
+<button onclick="showPage('private')">
+🔒
+</button>
+
+
+</nav>
+
+
+
+<script src="app.js"></script>
+
+
+</body>
+
+</html>
