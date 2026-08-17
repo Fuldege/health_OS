@@ -2,14 +2,352 @@
 <html lang="zh-CN">
 
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Jing Health OS</title>
 
-<link rel="stylesheet" href="style.css">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<style>
+
+:root{
+
+--bg:#f7f8fc;
+--card:#ffffff;
+--text:#222;
+--sub:#777;
+--accent:#7b8cff;
+--green:#62c58b;
+--danger:#ff7b7b;
+
+}
+
+
+*{
+box-sizing:border-box;
+}
+
+
+
+body{
+
+margin:0;
+
+padding-bottom:80px;
+
+background:var(--bg);
+
+font-family:
+-apple-system,
+BlinkMacSystemFont,
+"Segoe UI",
+"PingFang SC",
+sans-serif;
+
+color:var(--text);
+
+}
+
+
+
+/* header */
+
+.header{
+
+padding:28px 20px 15px;
+
+}
+
+
+
+.header h1{
+
+margin:0;
+
+font-size:26px;
+
+}
+
+
+
+.header p{
+
+color:var(--sub);
+
+}
+
+
+
+/* pages */
+
+.page{
+
+display:none;
+
+padding:0 16px;
+
+}
+
+
+.page.active{
+
+display:block;
+
+}
+
+
+
+
+/* cards */
+
+
+.card{
+
+background:white;
+
+border-radius:22px;
+
+padding:20px;
+
+margin-bottom:16px;
+
+box-shadow:
+0 8px 25px rgba(0,0,0,.06);
+
+}
+
+
+
+.card h2{
+
+margin-top:0;
+
+}
+
+
+.card h3{
+
+font-size:16px;
+
+}
+
+
+
+
+.hero{
+
+background:
+linear-gradient(
+135deg,
+#ffffff,
+#eef1ff
+);
+
+}
+
+
+
+.big{
+
+font-size:42px;
+
+font-weight:800;
+
+margin:20px 0;
+
+}
+
+
+
+.grid{
+
+display:grid;
+
+grid-template-columns:
+1fr 1fr;
+
+gap:12px;
+
+}
+
+
+
+
+.value{
+
+font-size:24px;
+
+font-weight:700;
+
+}
+
+
+
+.small{
+
+color:var(--sub);
+
+font-size:13px;
+
+}
+
+
+
+
+
+/* form */
+
+
+label{
+
+display:block;
+
+margin-top:15px;
+
+margin-bottom:6px;
+
+color:#555;
+
+}
+
+
+input,
+textarea,
+select{
+
+
+width:100%;
+
+padding:14px;
+
+border-radius:14px;
+
+border:1px solid #ddd;
+
+font-size:16px;
+
+background:#fafafa;
+
+
+}
+
+
+
+textarea{
+
+height:100px;
+
+}
+
+
+
+input[type=range]{
+
+accent-color:var(--accent);
+
+}
+
+
+
+button{
+
+border:none;
+
+border-radius:14px;
+
+padding:12px 16px;
+
+background:#eef1ff;
+
+font-size:15px;
+
+}
+
+
+
+.save{
+
+width:100%;
+
+background:var(--accent);
+
+color:white;
+
+margin-top:10px;
+
+}
+
+
+
+.tag{
+
+display:inline-block;
+
+padding:8px 12px;
+
+background:#eef1ff;
+
+border-radius:20px;
+
+margin:5px;
+
+}
+
+
+
+nav{
+
+position:fixed;
+
+bottom:0;
+
+left:0;
+
+right:0;
+
+height:70px;
+
+background:white;
+
+border-top:1px solid #eee;
+
+display:flex;
+
+justify-content:space-around;
+
+align-items:center;
+
+}
+
+
+
+nav button{
+
+background:none;
+
+font-size:25px;
+
+padding:5px;
+
+}
+
+
+
+.hidden{
+
+display:none;
+
+}
+
+
+
+
+</style>
+
 
 </head>
 
@@ -27,27 +365,36 @@
 
 
 
-<main>
 
 
-<!-- 首页 -->
+<!-- ===================
+Dashboard
+=================== -->
 
-<section id="dashboard" class="page active">
+
+<section id="home" class="page active">
 
 
 <div class="card hero">
 
-<h2>今日状态</h2>
+<h2>
+今日状态
+</h2>
 
-<div class="big-number">
+
+<div class="big" id="currentWeight">
 
 67.8 kg
 
 </div>
 
-<p>
+
+<div class="small">
+
 目标：60 kg
-</p>
+
+</div>
+
 
 </div>
 
@@ -60,13 +407,13 @@
 
 <h3>😴 睡眠</h3>
 
-<p id="sleepValue">
--- h
-</p>
+<div class="value" id="sleepShow">
+--
+</div>
 
-<p>
+<div class="small">
 深睡 --
-</p>
+</div>
 
 </div>
 
@@ -74,18 +421,15 @@
 
 <div class="card">
 
-<h3>🍦 食欲</h3>
+<h3>🍦 甜食</h3>
 
-<p id="sweetValue">
+<div class="value" id="sweetShow">
+--
+</div>
 
--- /10
-
-</p>
-
-<p>
-甜食冲动
-
-</p>
+<div class="small">
+今日欲望
+</div>
 
 </div>
 
@@ -95,11 +439,9 @@
 
 <h3>💩 肠道</h3>
 
-<p>
-
+<div class="value">
 --
-
-</p>
+</div>
 
 </div>
 
@@ -109,23 +451,27 @@
 
 <h3>🏃运动</h3>
 
-<p>
-
+<div class="value">
 --
-
-</p>
+</div>
 
 </div>
 
 
+
 </div>
+
 
 
 
 
 <div class="card">
 
-<h3>AI Health Coach</h3>
+
+<h3>
+AI Health Coach
+</h3>
+
 
 <p id="aiText">
 
@@ -137,19 +483,23 @@
 </div>
 
 
+
 </section>
 
 
 
 
 
-<!-- Daily记录 -->
+<!-- ===================
+Daily
+=================== -->
 
 
 <section id="daily" class="page">
 
 
 <div class="card">
+
 
 <h2>
 ✏️ 今日记录
@@ -161,7 +511,7 @@
 体重 kg
 </label>
 
-<input id="weight"
+<input id="weightInput"
 type="number"
 placeholder="67.8">
 
@@ -171,7 +521,7 @@ placeholder="67.8">
 睡眠小时
 </label>
 
-<input id="sleep"
+<input id="sleepInput"
 type="number"
 step="0.1"
 placeholder="7.5">
@@ -182,9 +532,10 @@ placeholder="7.5">
 深睡分钟
 </label>
 
-<input id="deepSleep"
+<input id="deepInput"
 type="number"
 placeholder="60">
+
 
 
 </div>
@@ -197,12 +548,13 @@ placeholder="60">
 
 
 <h3>
-🍦 甜食欲望
+🍦 食欲系统
 </h3>
 
 
+
 <label>
-上午
+上午甜食欲望
 </label>
 
 <input id="sweetAM"
@@ -212,8 +564,9 @@ max="10"
 value="5">
 
 
+
 <label>
-下午
+下午甜食欲望 ⭐
 </label>
 
 <input id="sweetPM"
@@ -223,8 +576,9 @@ max="10"
 value="5">
 
 
+
 <label>
-晚上
+晚上甜食欲望
 </label>
 
 <input id="sweetNight"
@@ -234,6 +588,7 @@ max="10"
 value="5">
 
 
+
 </div>
 
 
@@ -244,39 +599,50 @@ value="5">
 
 
 <h3>
-原因
+触发原因
 </h3>
 
 
-<div class="buttons">
+<div>
 
-
-<button>
+<span class="tag"
+onclick="setTrigger('压力')">
 压力
-</button>
+</span>
 
 
-<button>
+<span class="tag"
+onclick="setTrigger('疲劳')">
 疲劳
-</button>
+</span>
 
 
-<button>
+<span class="tag"
+onclick="setTrigger('真的饿')">
 真的饿
-</button>
+</span>
 
 
-<button>
+<span class="tag"
+onclick="setTrigger('奖励自己')">
 奖励自己
-</button>
+</span>
 
 
-<button>
+<span class="tag"
+onclick="setTrigger('看到别人吃')">
 看到别人吃
-</button>
+</span>
 
 
 </div>
+
+
+<p id="triggerText">
+
+未选择
+
+</p>
 
 
 </div>
@@ -289,27 +655,23 @@ value="5">
 
 
 <h3>
-便秘情况
+便秘
 </h3>
 
 
 <select id="constipation">
 
-
 <option>
 正常
 </option>
-
 
 <option>
 困难
 </option>
 
-
 <option>
 两天以上
 </option>
-
 
 <option>
 严重
@@ -319,8 +681,8 @@ value="5">
 </select>
 
 
-</div>
 
+</div>
 
 
 
@@ -328,18 +690,15 @@ value="5">
 <div class="card">
 
 
-<textarea
-id="note"
-placeholder="今天有什么特别的事情？">
+<textarea id="noteInput"
+placeholder="今天记录...">
 </textarea>
 
 
-
-<button
-class="save"
+<button class="save"
 onclick="saveDaily()">
 
-✨ 保存今日记录
+保存今日记录
 
 </button>
 
@@ -347,15 +706,14 @@ onclick="saveDaily()">
 </div>
 
 
+
 </section>
 
 
 
-
-
-
-
-<!-- 趋势 -->
+<!-- ===================
+Trend
+=================== -->
 
 
 <section id="trend" class="page">
@@ -368,13 +726,10 @@ onclick="saveDaily()">
 </h2>
 
 
-<canvas id="weightChart">
-
-</canvas>
+<canvas id="weightChart"></canvas>
 
 
 </div>
-
 
 
 </section>
@@ -383,9 +738,9 @@ onclick="saveDaily()">
 
 
 
-
-
-<!-- Beauty -->
+<!-- ===================
+Beauty
+=================== -->
 
 
 <section id="beauty" class="page">
@@ -395,18 +750,19 @@ onclick="saveDaily()">
 
 
 <h2>
-✨ Beauty
+✨ Beauty Evolution
 </h2>
 
 
 <label>
-头发状态 0-10
+头发状态
 </label>
 
-<input
+<input 
 type="range"
 min="0"
 max="10">
+
 
 
 <label>
@@ -421,7 +777,7 @@ max="10">
 
 
 <label>
-下巴痘
+下巴痘痘
 </label>
 
 <input
@@ -430,25 +786,30 @@ min="0"
 max="10">
 
 
-
 </div>
+
+
 
 
 
 <div class="card">
 
-<h3>
-购物记录
 
+<h3>
+🛍 购物记录
 </h3>
 
 
-<input placeholder="买了什么">
+<input placeholder="购买物品">
 
-<input placeholder="价格">
+
+<input 
+type="number"
+placeholder="价格">
 
 
 </div>
+
 
 
 </section>
@@ -459,7 +820,9 @@ max="10">
 
 
 
-<!-- Private -->
+<!-- ===================
+Private
+=================== -->
 
 
 <section id="private" class="page">
@@ -478,7 +841,7 @@ max="10">
 </p>
 
 
-<button onclick="showMedical()">
+<button onclick="unlockPrivate()">
 
 进入
 
@@ -489,40 +852,62 @@ max="10">
 
 
 
-<div id="medicalBox"
-class="card hidden">
+
+
+<div id="privateContent"
+class="hidden">
+
+
+<div class="card">
 
 
 <h3>
-Hormone Health
+🌸 Hormone Health
 </h3>
 
 
 <p>
-
 周期状态：
-
 长期无自然月经
+</p>
+
+
+<p>
+PCOS相关记录
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+💊 Medical Log
+</h3>
+
+
+<p>
+Medication / Lab
 
 </p>
 
 
-
-<h3>
-
-Medication
-
-</h3>
-
-
 <p>
-
-Private Log
+隐藏信息区域
 
 </p>
 
 
 </div>
+
+
+</div>
+
 
 
 </section>
@@ -531,18 +916,17 @@ Private Log
 
 
 
-</main>
 
 
 
 
-
+<!-- Bottom Nav -->
 
 
 <nav>
 
 
-<button onclick="showPage('dashboard')">
+<button onclick="showPage('home')">
 🏠
 </button>
 
@@ -571,9 +955,408 @@ Private Log
 
 
 
-<script src="app.js"></script>
+
+
+
+
+
+<script>
+
+
+// ======================
+// 基础数据
+// ======================
+
+
+let healthData =
+JSON.parse(
+localStorage.getItem("jingHealth")
+)
+||
+[];
+
+
+
+
+let trigger="";
+
+
+
+
+
+// ======================
+// 页面切换
+// ======================
+
+
+function showPage(id){
+
+
+document
+.querySelectorAll(".page")
+.forEach(
+p=>p.classList.remove("active")
+);
+
+
+document
+.getElementById(id)
+.classList.add("active");
+
+
+
+if(id==="trend"){
+
+drawChart();
+
+}
+
+
+}
+
+
+
+
+
+// ======================
+// 今日记录
+// ======================
+
+
+function setTrigger(value){
+
+
+trigger=value;
+
+
+document.getElementById(
+"triggerText"
+)
+.innerText=value;
+
+
+}
+
+
+
+
+function saveDaily(){
+
+
+let data={
+
+
+date:
+new Date()
+.toISOString()
+.slice(0,10),
+
+
+weight:
+Number(
+document.getElementById(
+"weightInput"
+).value
+),
+
+
+sleep:
+Number(
+document.getElementById(
+"sleepInput"
+).value
+),
+
+
+deep:
+Number(
+document.getElementById(
+"deepInput"
+).value
+),
+
+
+sweetPM:
+Number(
+document.getElementById(
+"sweetPM"
+).value
+),
+
+
+trigger:trigger,
+
+
+constipation:
+document.getElementById(
+"constipation"
+).value,
+
+
+note:
+document.getElementById(
+"noteInput"
+).value
+
+
+};
+
+
+
+
+
+healthData.push(data);
+
+
+
+localStorage.setItem(
+"jingHealth",
+JSON.stringify(
+healthData
+)
+);
+
+
+
+updateDashboard();
+
+
+alert(
+"✨ 今日记录已保存"
+);
+
+
+}
+
+
+
+
+
+
+
+// ======================
+// Dashboard
+// ======================
+
+
+function updateDashboard(){
+
+
+
+if(
+healthData.length===0
+)
+return;
+
+
+
+let last=
+healthData[
+healthData.length-1
+];
+
+
+
+if(last.weight){
+
+document.getElementById(
+"currentWeight"
+)
+.innerText=
+last.weight+" kg";
+
+}
+
+
+
+document.getElementById(
+"sleepShow"
+)
+.innerText=
+last.sleep
+?
+last.sleep+" h"
+:
+"--";
+
+
+
+document.getElementById(
+"sweetShow"
+)
+.innerText=
+last.sweetPM
++
+"/10";
+
+
+
+}
+
+
+
+updateDashboard();
+
+
+
+
+
+
+
+// ======================
+// Chart
+// ======================
+
+
+let chart;
+
+
+
+function drawChart(){
+
+
+
+let ctx=
+document
+.getElementById(
+"weightChart"
+);
+
+
+
+if(!ctx)
+return;
+
+
+
+let labels=
+healthData.map(
+x=>x.date
+);
+
+
+
+let values=
+healthData.map(
+x=>x.weight
+);
+
+
+
+
+
+if(chart){
+
+chart.destroy();
+
+}
+
+
+
+
+chart=
+new Chart(
+ctx,
+{
+
+
+type:"line",
+
+
+data:{
+
+
+labels:labels,
+
+
+datasets:[{
+
+
+label:"体重 kg",
+
+
+data:values,
+
+
+borderWidth:2
+
+
+}]
+
+
+},
+
+
+options:{
+
+
+responsive:true
+
+
+}
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+// ======================
+// Private
+// ======================
+
+
+function unlockPrivate(){
+
+
+let password=
+prompt(
+"请输入密码"
+);
+
+
+
+if(password==="jing"){
+
+
+document
+.getElementById(
+"privateContent"
+)
+.classList.remove(
+"hidden"
+);
+
+
+}
+
+else{
+
+
+alert(
+"密码错误"
+);
+
+
+}
+
+
+}
+
+
+
+
+</script>
+
 
 
 </body>
+
 
 </html>
