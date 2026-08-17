@@ -16,19 +16,19 @@
 
 :root{
 
---bg:#f7f8fc;
+--bg:#f6f7fb;
 --card:#ffffff;
 --text:#222;
 --sub:#777;
 --accent:#7b8cff;
---green:#62c58b;
---danger:#ff7b7b;
 
 }
 
 
 *{
+
 box-sizing:border-box;
+
 }
 
 
@@ -39,14 +39,13 @@ margin:0;
 
 padding-bottom:80px;
 
-background:var(--bg);
-
 font-family:
 -apple-system,
 BlinkMacSystemFont,
-"Segoe UI",
 "PingFang SC",
 sans-serif;
+
+background:var(--bg);
 
 color:var(--text);
 
@@ -54,11 +53,9 @@ color:var(--text);
 
 
 
-/* header */
-
 .header{
 
-padding:28px 20px 15px;
+padding:25px 18px;
 
 }
 
@@ -82,13 +79,11 @@ color:var(--sub);
 
 
 
-/* pages */
-
 .page{
 
 display:none;
 
-padding:0 16px;
+padding:0 15px;
 
 }
 
@@ -101,10 +96,6 @@ display:block;
 
 
 
-
-/* cards */
-
-
 .card{
 
 background:white;
@@ -113,28 +104,12 @@ border-radius:22px;
 
 padding:20px;
 
-margin-bottom:16px;
+margin-bottom:15px;
 
 box-shadow:
-0 8px 25px rgba(0,0,0,.06);
+0 6px 20px rgba(0,0,0,.06);
 
 }
-
-
-
-.card h2{
-
-margin-top:0;
-
-}
-
-
-.card h3{
-
-font-size:16px;
-
-}
-
 
 
 
@@ -143,7 +118,7 @@ font-size:16px;
 background:
 linear-gradient(
 135deg,
-#ffffff,
+#fff,
 #eef1ff
 );
 
@@ -157,8 +132,6 @@ font-size:42px;
 
 font-weight:800;
 
-margin:20px 0;
-
 }
 
 
@@ -167,8 +140,7 @@ margin:20px 0;
 
 display:grid;
 
-grid-template-columns:
-1fr 1fr;
+grid-template-columns:1fr 1fr;
 
 gap:12px;
 
@@ -176,12 +148,11 @@ gap:12px;
 
 
 
-
 .value{
 
 font-size:24px;
 
-font-weight:700;
+font-weight:bold;
 
 }
 
@@ -189,7 +160,7 @@ font-weight:700;
 
 .small{
 
-color:var(--sub);
+color:#888;
 
 font-size:13px;
 
@@ -197,32 +168,15 @@ font-size:13px;
 
 
 
-
-
-/* form */
-
-
-label{
-
-display:block;
-
-margin-top:15px;
-
-margin-bottom:6px;
-
-color:#555;
-
-}
-
-
 input,
-textarea,
-select{
-
+select,
+textarea{
 
 width:100%;
 
-padding:14px;
+padding:13px;
+
+margin-top:8px;
 
 border-radius:14px;
 
@@ -230,11 +184,7 @@ border:1px solid #ddd;
 
 font-size:16px;
 
-background:#fafafa;
-
-
 }
-
 
 
 textarea{
@@ -257,9 +207,9 @@ button{
 
 border:none;
 
-border-radius:14px;
-
 padding:12px 16px;
+
+border-radius:14px;
 
 background:#eef1ff;
 
@@ -277,8 +227,6 @@ background:var(--accent);
 
 color:white;
 
-margin-top:10px;
-
 }
 
 
@@ -293,7 +241,7 @@ background:#eef1ff;
 
 border-radius:20px;
 
-margin:5px;
+margin:4px;
 
 }
 
@@ -329,9 +277,7 @@ nav button{
 
 background:none;
 
-font-size:25px;
-
-padding:5px;
+font-size:24px;
 
 }
 
@@ -344,10 +290,7 @@ display:none;
 }
 
 
-
-
 </style>
-
 
 </head>
 
@@ -355,44 +298,41 @@ display:none;
 <body>
 
 
+
 <header class="header">
 
 <h1>🌱 Jing Health OS</h1>
 
-<p>Body · Health · Beauty</p>
+<p>
+Body · Health · Beauty
+</p>
 
 </header>
 
 
 
-
-
-<!-- ===================
-Dashboard
-=================== -->
-
+<!-- Dashboard -->
 
 <section id="home" class="page active">
 
 
 <div class="card hero">
 
+
 <h2>
 今日状态
 </h2>
 
 
-<div class="big" id="currentWeight">
+<div id="weightShow" class="big">
 
-67.8 kg
+--
 
 </div>
 
 
 <div class="small">
-
 目标：60 kg
-
 </div>
 
 
@@ -411,35 +351,26 @@ Dashboard
 --
 </div>
 
-<div class="small">
-深睡 --
-</div>
-
 </div>
 
 
 
 <div class="card">
 
-<h3>🍦 甜食</h3>
+<h3>🍦甜食</h3>
 
 <div class="value" id="sweetShow">
 --
 </div>
 
-<div class="small">
-今日欲望
 </div>
-
-</div>
-
 
 
 <div class="card">
 
-<h3>💩 肠道</h3>
+<h3>💩肠道</h3>
 
-<div class="value">
+<div class="value" id="bowelShow">
 --
 </div>
 
@@ -463,25 +394,17 @@ Dashboard
 
 
 
-
-
 <div class="card">
-
 
 <h3>
 AI Health Coach
 </h3>
 
-
 <p id="aiText">
-
 等待数据...
-
 </p>
 
-
 </div>
-
 
 
 </section>
@@ -490,10 +413,8 @@ AI Health Coach
 
 
 
-<!-- ===================
-Daily
-=================== -->
 
+<!-- Daily -->
 
 <section id="daily" class="page">
 
@@ -548,40 +469,17 @@ placeholder="60">
 
 
 <h3>
-🍦 食欲系统
+🍦甜食欲望
 </h3>
 
 
 
 <label>
-上午甜食欲望
+下午甜食欲望（重点）
 </label>
 
-<input id="sweetAM"
-type="range"
-min="0"
-max="10"
-value="5">
-
-
-
-<label>
-下午甜食欲望 ⭐
-</label>
 
 <input id="sweetPM"
-type="range"
-min="0"
-max="10"
-value="5">
-
-
-
-<label>
-晚上甜食欲望
-</label>
-
-<input id="sweetNight"
 type="range"
 min="0"
 max="10"
@@ -597,51 +495,38 @@ value="5">
 
 <div class="card">
 
-
 <h3>
 触发原因
 </h3>
 
 
-<div>
-
 <span class="tag"
-onclick="setTrigger('压力')">
+onclick="chooseTrigger('压力')">
 压力
 </span>
 
 
 <span class="tag"
-onclick="setTrigger('疲劳')">
+onclick="chooseTrigger('疲劳')">
 疲劳
 </span>
 
 
 <span class="tag"
-onclick="setTrigger('真的饿')">
+onclick="chooseTrigger('真的饿')">
 真的饿
 </span>
 
 
 <span class="tag"
-onclick="setTrigger('奖励自己')">
+onclick="chooseTrigger('奖励自己')">
 奖励自己
 </span>
 
 
-<span class="tag"
-onclick="setTrigger('看到别人吃')">
-看到别人吃
-</span>
-
-
-</div>
-
 
 <p id="triggerText">
-
 未选择
-
 </p>
 
 
@@ -661,28 +546,20 @@ onclick="setTrigger('看到别人吃')">
 
 <select id="constipation">
 
-<option>
-正常
-</option>
+<option>正常</option>
 
-<option>
-困难
-</option>
+<option>困难</option>
 
-<option>
-两天以上
-</option>
+<option>两天以上</option>
 
-<option>
-严重
-</option>
+<option>严重</option>
 
 
 </select>
 
 
-
 </div>
+
 
 
 
@@ -691,7 +568,7 @@ onclick="setTrigger('看到别人吃')">
 
 
 <textarea id="noteInput"
-placeholder="今天记录...">
+placeholder="今天有什么特别记录？">
 </textarea>
 
 
@@ -710,10 +587,9 @@ onclick="saveDaily()">
 </section>
 
 
-
-<!-- ===================
+<!-- =====================
 Trend
-=================== -->
+===================== -->
 
 
 <section id="trend" class="page">
@@ -722,7 +598,7 @@ Trend
 <div class="card">
 
 <h2>
-📈 趋势
+📈 健康趋势
 </h2>
 
 
@@ -732,15 +608,37 @@ Trend
 </div>
 
 
+<div class="card">
+
+<h3>
+数据状态
+</h3>
+
+
+<p id="dataStatus">
+
+等待同步 Google Sheet
+
+</p>
+
+
+</div>
+
+
+
 </section>
 
 
 
 
 
-<!-- ===================
+
+
+
+
+<!-- =====================
 Beauty
-=================== -->
+===================== -->
 
 
 <section id="beauty" class="page">
@@ -754,14 +652,18 @@ Beauty
 </h2>
 
 
+
 <label>
 头发状态
 </label>
 
-<input 
+
+<input
 type="range"
 min="0"
 max="10">
+
+
 
 
 
@@ -769,16 +671,20 @@ max="10">
 头油程度
 </label>
 
+
 <input
 type="range"
 min="0"
 max="10">
+
+
 
 
 
 <label>
-下巴痘痘
+下巴痘
 </label>
+
 
 <input
 type="range"
@@ -786,7 +692,9 @@ min="0"
 max="10">
 
 
+
 </div>
+
 
 
 
@@ -796,14 +704,15 @@ max="10">
 
 
 <h3>
-🛍 购物记录
+🛍 Shopping Log
 </h3>
 
 
-<input placeholder="购买物品">
+<input
+placeholder="买了什么">
 
 
-<input 
+<input
 type="number"
 placeholder="价格">
 
@@ -820,9 +729,11 @@ placeholder="价格">
 
 
 
-<!-- ===================
+
+
+<!-- =====================
 Private
-=================== -->
+===================== -->
 
 
 <section id="private" class="page">
@@ -837,8 +748,9 @@ Private
 
 
 <p>
-医疗信息隐藏区域
+医疗和激素信息
 </p>
+
 
 
 <button onclick="unlockPrivate()">
@@ -854,7 +766,7 @@ Private
 
 
 
-<div id="privateContent"
+<div id="privateBox"
 class="hidden">
 
 
@@ -873,7 +785,7 @@ class="hidden">
 
 
 <p>
-PCOS相关记录
+PCOS记录区域
 </p>
 
 
@@ -892,13 +804,13 @@ PCOS相关记录
 
 
 <p>
-Medication / Lab
+Private Medication
 
 </p>
 
 
 <p>
-隐藏信息区域
+Lab Data
 
 </p>
 
@@ -906,7 +818,9 @@ Medication / Lab
 </div>
 
 
+
 </div>
+
 
 
 
@@ -920,7 +834,9 @@ Medication / Lab
 
 
 
-<!-- Bottom Nav -->
+<!-- =====================
+Navigation
+===================== -->
 
 
 <nav>
@@ -960,33 +876,39 @@ Medication / Lab
 
 
 
+
+
 <script>
 
 
-// ======================
-// 基础数据
-// ======================
+// =====================
+// Google Sheet API
+// =====================
 
 
-let healthData =
-JSON.parse(
-localStorage.getItem("jingHealth")
-)
-||
-[];
+const API_URL =
+"https://script.google.com/macros/s/AKfycbw31HnPaGvJPHrpHxfoxNv21cSoUlE2hUOjr9zYkfDAblG35kB8PJ61Jh_EYBV8JDMT/exec";
 
 
+
+
+
+let records=[];
 
 
 let trigger="";
 
 
+let chart=null;
 
 
 
-// ======================
+
+
+
+// =====================
 // 页面切换
-// ======================
+// =====================
 
 
 function showPage(id){
@@ -995,8 +917,11 @@ function showPage(id){
 document
 .querySelectorAll(".page")
 .forEach(
-p=>p.classList.remove("active")
+p=>{
+p.classList.remove("active");
+}
 );
+
 
 
 document
@@ -1018,18 +943,225 @@ drawChart();
 
 
 
-// ======================
-// 今日记录
-// ======================
 
 
-function setTrigger(value){
+// =====================
+// 初始化
+// =====================
+
+
+window.onload=function(){
+
+
+loadData();
+
+
+};
+
+
+
+
+
+
+
+
+// =====================
+// 读取 Google Sheet
+// =====================
+
+
+function loadData(){
+
+
+fetch(API_URL)
+
+
+.then(
+res=>res.json()
+)
+
+
+.then(
+data=>{
+
+
+records=data;
+
+
+console.log(
+"Google Sheet:",
+data
+);
+
+
+updateDashboard();
+
+
+document.getElementById(
+"dataStatus"
+)
+.innerText=
+"已读取 "+
+data.length+
+" 条记录";
+
+
+}
+
+
+)
+
+
+.catch(
+err=>{
+
+
+console.log(err);
+
+
+document.getElementById(
+"dataStatus"
+)
+.innerText=
+"同步失败";
+
+
+}
+
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+// =====================
+// Dashboard 更新
+// =====================
+
+
+function updateDashboard(){
+
+
+
+if(records.length===0){
+
+
+document
+.getElementById(
+"weightShow"
+)
+.innerText=
+"-- kg";
+
+
+return;
+
+
+}
+
+
+
+
+
+let last=
+records[
+records.length-1
+];
+
+
+
+
+if(last.weight){
+
+
+document
+.getElementById(
+"weightShow"
+)
+.innerText=
+last.weight+
+" kg";
+
+
+}
+
+
+
+if(last.sleep){
+
+
+document
+.getElementById(
+"sleepShow"
+)
+.innerText=
+last.sleep+
+"h";
+
+
+}
+
+
+
+if(last.sweetPM){
+
+
+document
+.getElementById(
+"sweetShow"
+)
+.innerText=
+last.sweetPM+
+"/10";
+
+
+}
+
+
+
+if(last.constipation){
+
+
+document
+.getElementById(
+"bowelShow"
+)
+.innerText=
+last.constipation;
+
+
+}
+
+
+
+
+}
+
+
+
+
+
+// =====================
+// 触发原因
+// =====================
+
+
+function chooseTrigger(value){
 
 
 trigger=value;
 
 
-document.getElementById(
+document
+.getElementById(
 "triggerText"
 )
 .innerText=value;
@@ -1040,296 +1172,32 @@ document.getElementById(
 
 
 
-function saveDaily(){
 
 
-let data={
-
-
-date:
-new Date()
-.toISOString()
-.slice(0,10),
-
-
-weight:
-Number(
-document.getElementById(
-"weightInput"
-).value
-),
-
-
-sleep:
-Number(
-document.getElementById(
-"sleepInput"
-).value
-),
-
-
-deep:
-Number(
-document.getElementById(
-"deepInput"
-).value
-),
-
-
-sweetPM:
-Number(
-document.getElementById(
-"sweetPM"
-).value
-),
-
-
-trigger:trigger,
-
-
-constipation:
-document.getElementById(
-"constipation"
-).value,
-
-
-note:
-document.getElementById(
-"noteInput"
-).value
-
-
-};
-
-
-
-
-
-healthData.push(data);
-
-
-
-localStorage.setItem(
-"jingHealth",
-JSON.stringify(
-healthData
-)
-);
-
-
-
-updateDashboard();
-
-
-alert(
-"✨ 今日记录已保存"
-);
-
-
-}
-
-
-
-
-
-
-
-// ======================
-// Dashboard
-// ======================
-
-
-function updateDashboard(){
-
-
-
-if(
-healthData.length===0
-)
-return;
-
-
-
-let last=
-healthData[
-healthData.length-1
-];
-
-
-
-if(last.weight){
-
-document.getElementById(
-"currentWeight"
-)
-.innerText=
-last.weight+" kg";
-
-}
-
-
-
-document.getElementById(
-"sleepShow"
-)
-.innerText=
-last.sleep
-?
-last.sleep+" h"
-:
-"--";
-
-
-
-document.getElementById(
-"sweetShow"
-)
-.innerText=
-last.sweetPM
-+
-"/10";
-
-
-
-}
-
-
-
-updateDashboard();
-
-
-
-
-
-
-
-// ======================
-// Chart
-// ======================
-
-
-let chart;
-
-
-
-function drawChart(){
-
-
-
-let ctx=
-document
-.getElementById(
-"weightChart"
-);
-
-
-
-if(!ctx)
-return;
-
-
-
-let labels=
-healthData.map(
-x=>x.date
-);
-
-
-
-let values=
-healthData.map(
-x=>x.weight
-);
-
-
-
-
-
-if(chart){
-
-chart.destroy();
-
-}
-
-
-
-
-chart=
-new Chart(
-ctx,
-{
-
-
-type:"line",
-
-
-data:{
-
-
-labels:labels,
-
-
-datasets:[{
-
-
-label:"体重 kg",
-
-
-data:values,
-
-
-borderWidth:2
-
-
-}]
-
-
-},
-
-
-options:{
-
-
-responsive:true
-
-
-}
-
-
-});
-
-
-}
-
-
-
-
-
-
-
-// ======================
+// =====================
 // Private
-// ======================
+// =====================
 
 
 function unlockPrivate(){
 
 
-let password=
+let pwd=
 prompt(
 "请输入密码"
 );
 
 
 
-if(password==="jing"){
+if(pwd==="jing"){
 
 
 document
 .getElementById(
-"privateContent"
+"privateBox"
 )
-.classList.remove(
+.classList
+.remove(
 "hidden"
 );
 
@@ -1351,12 +1219,315 @@ alert(
 
 
 
+<script>
+
+
+// =====================
+// 保存 Daily 数据
+// =====================
+
+
+function saveDaily(){
+
+
+
+let data={
+
+
+date:
+new Date()
+.toISOString()
+.substring(0,10),
+
+
+
+weight:
+document
+.getElementById(
+"weightInput"
+)
+.value,
+
+
+
+sleep:
+document
+.getElementById(
+"sleepInput"
+)
+.value,
+
+
+
+deep:
+document
+.getElementById(
+"deepInput"
+)
+.value,
+
+
+
+sweetPM:
+document
+.getElementById(
+"sweetPM"
+)
+.value,
+
+
+
+trigger:
+trigger,
+
+
+
+constipation:
+document
+.getElementById(
+"constipation"
+)
+.value,
+
+
+
+note:
+document
+.getElementById(
+"noteInput"
+)
+.value
+
+
+
+};
+
+
+
+
+
+console.log(
+"准备发送:",
+data
+);
+
+
+
+
+
+fetch(
+API_URL,
+{
+
+
+method:"POST",
+
+
+body:
+JSON.stringify(data)
+
+
+
+}
+
+)
+
+.then(
+res=>res.json()
+)
+
+
+.then(
+result=>{
+
+
+console.log(
+"保存结果:",
+result
+);
+
+
+
+alert(
+"✅ 已同步 Google Sheet"
+);
+
+
+
+loadData();
+
+
+
+}
+
+)
+
+
+.catch(
+err=>{
+
+
+console.error(err);
+
+
+
+alert(
+"❌ 保存失败，请检查 API"
+);
+
+
+
+}
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+// =====================
+// Chart.js
+// =====================
+
+
+function drawChart(){
+
+
+
+let canvas =
+document
+.getElementById(
+"weightChart"
+);
+
+
+
+if(!canvas)
+return;
+
+
+
+
+
+if(chart){
+
+chart.destroy();
+
+}
+
+
+
+
+
+
+
+let labels =
+records.map(
+item=>item.date
+);
+
+
+
+let values =
+records.map(
+item=>
+Number(
+item.weight
+)
+);
+
+
+
+
+
+
+chart =
+new Chart(
+canvas,
+{
+
+
+type:"line",
+
+
+data:{
+
+
+labels:labels,
+
+
+datasets:[{
+
+
+label:"体重 kg",
+
+
+data:values,
+
+
+borderWidth:2,
+
+
+tension:.3
+
+
+}]
+
+
+},
+
+
+options:{
+
+
+responsive:true,
+
+
+plugins:{
+
+
+legend:{
+
+
+display:true
+
+
+}
+
+
+}
+
+
+
+}
+
+
+}
+
+);
+
+
+
+}
+
+
+
+
+
 
 </script>
 
 
-
 </body>
 
-
 </html>
+
+
+  
