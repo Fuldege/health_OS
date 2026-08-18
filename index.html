@@ -7,106 +7,254 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
-  --bg:#f6f7fb; --card:#ffffff; --text:#222; --sub:#777; --accent:#7b8cff; --danger:#ff6b6b;
+  --bg:#f4f4f6;
+  --card:#ffffff;
+  --text:#17181c;
+  --sub:#8b8d94;
+  --line:#e8e8eb;
+  --accent:#3a3a3c;
+  --accent-soft:#eeeeef;
+  --danger:#c65a4f;
+  --radius:16px;
 }
 *{box-sizing:border-box;}
-body{margin:0;padding-bottom:80px;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:var(--bg);color:var(--text);}
-.header{padding:22px 18px 10px;}
-.header h1{margin:0;font-size:24px;}
-.header p{color:var(--sub);margin:4px 0 0;font-size:13px;}
-.page{display:none;padding:0 15px;}
+html,body{height:100%;}
+body{
+  margin:0;
+  padding-bottom:84px;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+.header{padding:28px 20px 12px;}
+.header h1{margin:0;font-size:20px;font-weight:600;letter-spacing:.2px;}
+.header p{color:var(--sub);margin:4px 0 0;font-size:12.5px;letter-spacing:.3px;text-transform:uppercase;}
+
+.page{display:none;padding:0 16px;max-width:520px;margin:0 auto;}
 .page.active{display:block;}
-.card{background:white;border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);}
-.hero{background:linear-gradient(135deg,#fff,#eef1ff);}
-.big{font-size:38px;font-weight:800;}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-bottom:12px;
+  border:1px solid var(--line);
+}
+.card h2{margin:0 0 4px;font-size:17px;font-weight:600;}
+
+.hero .hero-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.hero-date{color:var(--sub);font-size:12.5px;margin-top:2px;}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;}
+.hero-stat-label{font-size:11.5px;color:var(--sub);text-transform:uppercase;letter-spacing:.4px;}
+.hero-stat-value{font-size:26px;font-weight:600;margin-top:4px;}
+
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.value{font-size:22px;font-weight:bold;}
-.small{color:#888;font-size:13px;}
-label{display:block;margin-top:12px;font-size:13px;color:#555;}
-label:first-child{margin-top:0;}
-input,select,textarea{width:100%;padding:12px;margin-top:6px;border-radius:12px;border:1px solid #ddd;font-size:15px;background:#fff;}
-textarea{height:80px;}
-input[type=range]{accent-color:var(--accent);padding:0;}
-.range-row{display:flex;align-items:center;gap:10px;}
-.range-row input[type=range]{flex:1;}
-.range-val{width:28px;text-align:right;font-weight:bold;color:var(--accent);}
-button{border:none;padding:12px 16px;border-radius:14px;background:#eef1ff;font-size:14px;cursor:pointer;}
-.save{width:100%;background:var(--accent);color:white;margin-top:14px;font-weight:bold;}
+.stat-card{padding-bottom:16px;}
+.stat-icon{width:18px;height:18px;color:var(--sub);}
+.stat-label{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--sub);margin-bottom:8px;}
+.stat-value{font-size:20px;font-weight:600;}
+.stat-sub{font-size:12px;color:var(--sub);margin-top:4px;}
+
+label{
+  display:block;
+  margin-top:16px;
+  font-size:12.5px;
+  color:var(--sub);
+  font-weight:500;
+  display:flex;
+  justify-content:space-between;
+}
+label:first-of-type{margin-top:0;}
+.section-title{
+  font-size:13px;
+  font-weight:600;
+  color:var(--text);
+  text-transform:uppercase;
+  letter-spacing:.4px;
+  margin:0 0 14px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.section-title svg{width:15px;height:15px;color:var(--sub);}
+
+input,select,textarea{
+  width:100%;
+  padding:12px 13px;
+  margin-top:7px;
+  border-radius:11px;
+  border:1px solid var(--line);
+  font-size:15px;
+  background:#fafafa;
+  color:var(--text);
+  font-family:inherit;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#bdbdc0;background:#fff;}
+textarea{height:74px;resize:none;}
+
+input[type=range]{
+  accent-color:var(--accent);
+  padding:0;
+  margin-top:8px;
+  height:4px;
+}
+.range-val{font-weight:600;color:var(--text);font-size:12.5px;}
+
+button{
+  border:none;
+  padding:12px 16px;
+  border-radius:11px;
+  background:var(--accent-soft);
+  color:var(--text);
+  font-size:14px;
+  cursor:pointer;
+  font-weight:500;
+  font-family:inherit;
+}
+.save{width:100%;background:var(--accent);color:#fff;margin-top:18px;font-weight:600;font-size:14.5px;padding:13px;}
+.save:active{opacity:.85;}
 .save.danger{background:var(--danger);}
-.tag{display:inline-block;padding:8px 12px;background:#eef1ff;border-radius:20px;margin:4px 4px 0 0;font-size:13px;cursor:pointer;user-select:none;}
-.tag.active{background:var(--accent);color:white;}
-.fab{position:fixed;right:18px;bottom:90px;width:58px;height:58px;border-radius:50%;background:var(--accent);color:white;font-size:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(123,140,255,.5);z-index:20;}
-nav{position:fixed;bottom:0;left:0;right:0;height:68px;background:white;border-top:1px solid #eee;display:flex;justify-content:space-around;align-items:center;}
-nav button{background:none;font-size:22px;padding:6px 10px;}
-nav button.active{color:var(--accent);}
+
+.tag{
+  display:inline-flex;
+  align-items:center;
+  padding:8px 14px;
+  background:#fafafa;
+  border:1px solid var(--line);
+  border-radius:20px;
+  margin:0 6px 6px 0;
+  font-size:13px;
+  cursor:pointer;
+  user-select:none;
+  color:var(--sub);
+}
+.tag.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+.fab{
+  position:fixed;
+  right:18px;
+  bottom:96px;
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.22);
+  z-index:20;
+  border:none;
+  cursor:pointer;
+}
+.fab svg{width:24px;height:24px;}
+
+nav{
+  position:fixed;bottom:0;left:0;right:0;height:70px;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;align-items:center;
+}
+nav button{
+  background:none;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  color:var(--sub);
+  padding:6px 10px;
+}
+nav button svg{width:21px;height:21px;}
+nav button span{font-size:10px;letter-spacing:.2px;}
+nav button.active{color:var(--text);}
+
 .hidden{display:none;}
-.checkbox-row{display:flex;align-items:center;gap:8px;margin-top:10px;}
-.checkbox-row input[type=checkbox]{width:auto;margin:0;}
-.section-title{font-size:15px;font-weight:bold;margin:0 0 4px;}
+.checkbox-row{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:13.5px;}
+.checkbox-row input[type=checkbox]{width:17px;height:17px;margin:0;accent-color:var(--accent);}
+.se-range-row{margin-top:8px;}
+
+.empty-note{color:var(--sub);font-size:13px;line-height:1.5;}
+.lock-icon{width:26px;height:26px;color:var(--sub);margin-bottom:10px;}
 </style>
 </head>
 <body>
 
 <header class="header">
-  <h1>🌱 Jing Health OS</h1>
+  <h1>Jing Health OS</h1>
   <p>Body · Behavior · Health · Beauty</p>
 </header>
 
-<!-- ===================== Dashboard（只读镜像）===================== -->
+<!-- ===================== Dashboard ===================== -->
 <section id="home" class="page active">
   <div class="card hero">
-    <h2 style="margin:0 0 6px;">今日状态</h2>
-    <div id="dashDate" class="small">--</div>
-    <div class="grid" style="margin-top:12px;">
+    <div class="hero-top">
       <div>
-        <div class="small">7日平均体重</div>
-        <div class="big" id="dashWeight" style="font-size:28px;">--</div>
+        <h2>今日状态</h2>
+        <div class="hero-date" id="dashDate">--</div>
+      </div>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <div class="hero-stat-label">7日平均体重</div>
+        <div class="hero-stat-value" id="dashWeight">--</div>
       </div>
       <div>
-        <div class="small">距上次注射</div>
-        <div class="big" id="dashInjection" style="font-size:28px;">--</div>
+        <div class="hero-stat-label">距上次注射</div>
+        <div class="hero-stat-value" id="dashInjection">--</div>
       </div>
     </div>
   </div>
 
   <div class="grid">
-    <div class="card">
-      <div class="section-title">😴 睡眠</div>
-      <div class="value" id="dashSleep">--</div>
+    <div class="card stat-card">
+      <div class="stat-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        睡眠
+      </div>
+      <div class="stat-value" id="dashSleep">--</div>
     </div>
-    <div class="card">
-      <div class="section-title">🍩 今日食欲峰值</div>
-      <div class="value" id="dashAppetite">--</div>
-      <div class="small" id="dashTrigger">--</div>
+    <div class="card stat-card">
+      <div class="stat-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        今日食欲峰值
+      </div>
+      <div class="stat-value" id="dashAppetite">--</div>
+      <div class="stat-sub" id="dashTrigger"></div>
     </div>
   </div>
 
   <div class="card">
-    <div class="section-title">✨ 外貌趋势</div>
-    <div class="small" id="dashBeauty">--</div>
+    <div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 15c2-6 6-9 8-9s6 3 8 9"/><path d="M4 15c0 3 3.5 5 8 5s8-2 8-5"/></svg>
+      外貌趋势
+    </div>
+    <div class="empty-note" id="dashBeauty">--</div>
   </div>
 
   <div class="card">
-    <div class="section-title">🤖 AI Health Coach</div>
-    <p id="aiText" class="small">数据积累中，暂无分析建议。</p>
+    <div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3a5 5 0 0 0-5 5c0 2 1 3 1 5v2h8v-2c0-2 1-3 1-5a5 5 0 0 0-5-5Z"/><path d="M10 18h4M11 21h2"/></svg>
+      AI Health Coach
+    </div>
+    <p class="empty-note" id="aiText">数据积累中，暂无分析建议。</p>
   </div>
 </section>
 
-<!-- ===================== Appetite（核心高频入口）===================== -->
+<!-- ===================== Appetite ===================== -->
 <section id="appetite" class="page">
   <div class="card">
-    <h2 style="margin:0 0 6px;">🍩 现在，想吃点什么？</h2>
-    <p class="small" style="margin:0;">随时记录，越快越好，不用等到"吃完"再补。</p>
+    <h2>现在，想吃点什么？</h2>
+    <p class="empty-note" style="margin:4px 0 0;">随时记录，越快越好，不用等到"吃完"再补。</p>
   </div>
 
   <div class="card">
     <div class="section-title">身体状态</div>
     <label>饥饿感 <span class="range-val" id="apHungerVal">5</span></label>
-    <div class="range-row"><input type="range" id="apHunger" min="0" max="10" value="5" oninput="syncVal('apHunger','apHungerVal')"></div>
+    <input type="range" id="apHunger" min="0" max="10" value="5" oninput="syncVal('apHunger','apHungerVal')">
     <label>疲劳 <span class="range-val" id="apFatigueVal">5</span></label>
-    <div class="range-row"><input type="range" id="apFatigue" min="0" max="10" value="5" oninput="syncVal('apFatigue','apFatigueVal')"></div>
+    <input type="range" id="apFatigue" min="0" max="10" value="5" oninput="syncVal('apFatigue','apFatigueVal')">
     <label>压力 <span class="range-val" id="apStressVal">5</span></label>
-    <div class="range-row"><input type="range" id="apStress" min="0" max="10" value="5" oninput="syncVal('apStress','apStressVal')"></div>
+    <input type="range" id="apStress" min="0" max="10" value="5" oninput="syncVal('apStress','apStressVal')">
   </div>
 
   <div class="card">
@@ -118,8 +266,8 @@ nav button.active{color:var(--accent);}
       <span class="tag" data-val="奶">奶</span>
       <span class="tag" data-val="正餐">正餐</span>
     </div>
-    <label>想吃强度 <span class="range-val" id="apIntensityVal">5</span></label>
-    <div class="range-row"><input type="range" id="apIntensity" min="0" max="10" value="5" oninput="syncVal('apIntensity','apIntensityVal')"></div>
+    <label style="margin-top:18px;">想吃强度 <span class="range-val" id="apIntensityVal">5</span></label>
+    <input type="range" id="apIntensity" min="0" max="10" value="5" oninput="syncVal('apIntensity','apIntensityVal')">
   </div>
 
   <div class="card">
@@ -144,31 +292,31 @@ nav button.active{color:var(--accent);}
       <option>暴食</option>
     </select>
     <label>满足感 <span class="range-val" id="apSatisVal">5</span></label>
-    <div class="range-row"><input type="range" id="apSatis" min="0" max="10" value="5" oninput="syncVal('apSatis','apSatisVal')"></div>
+    <input type="range" id="apSatis" min="0" max="10" value="5" oninput="syncVal('apSatis','apSatisVal')">
     <label>后悔感 <span class="range-val" id="apRegretVal">5</span></label>
-    <div class="range-row"><input type="range" id="apRegret" min="0" max="10" value="5" oninput="syncVal('apRegret','apRegretVal')"></div>
-    <textarea id="apNote" placeholder="备注（可选）" style="margin-top:12px;"></textarea>
+    <input type="range" id="apRegret" min="0" max="10" value="5" oninput="syncVal('apRegret','apRegretVal')">
+    <textarea id="apNote" placeholder="备注（可选）" style="margin-top:16px;"></textarea>
     <button class="save" onclick="saveAppetite()">保存这次记录</button>
   </div>
 </section>
 
-<!-- ===================== Daily（Food + Sleep）===================== -->
+<!-- ===================== Daily ===================== -->
 <section id="daily" class="page">
   <div class="card">
-    <div class="section-title">🍽 今日饮食</div>
+    <div class="section-title">今日饮食</div>
     <label>吃了什么</label>
     <input id="foodName" placeholder="例如：便利店三明治">
     <label>快乐程度 <span class="range-val" id="foodJoyVal">5</span></label>
-    <div class="range-row"><input type="range" id="foodJoy" min="0" max="10" value="5" oninput="syncVal('foodJoy','foodJoyVal')"></div>
+    <input type="range" id="foodJoy" min="0" max="10" value="5" oninput="syncVal('foodJoy','foodJoyVal')">
     <label>满足感 <span class="range-val" id="foodSatisVal">5</span></label>
-    <div class="range-row"><input type="range" id="foodSatis" min="0" max="10" value="5" oninput="syncVal('foodSatis','foodSatisVal')"></div>
+    <input type="range" id="foodSatis" min="0" max="10" value="5" oninput="syncVal('foodSatis','foodSatisVal')">
     <label>后悔感 <span class="range-val" id="foodRegretVal">5</span></label>
-    <div class="range-row"><input type="range" id="foodRegret" min="0" max="10" value="5" oninput="syncVal('foodRegret','foodRegretVal')"></div>
+    <input type="range" id="foodRegret" min="0" max="10" value="5" oninput="syncVal('foodRegret','foodRegretVal')">
     <button class="save" onclick="saveFood()">保存饮食记录</button>
   </div>
 
   <div class="card">
-    <div class="section-title">😴 睡眠</div>
+    <div class="section-title">睡眠</div>
     <label>睡眠小时</label>
     <input id="sleepHours" type="number" step="0.1" placeholder="7.5">
     <label>深睡分钟</label>
@@ -176,15 +324,15 @@ nav button.active{color:var(--accent);}
     <label>REM分钟</label>
     <input id="remMin" type="number" placeholder="90">
     <label>起床精神 <span class="range-val" id="wakeFeelVal">5</span></label>
-    <div class="range-row"><input type="range" id="wakeFeel" min="0" max="10" value="5" oninput="syncVal('wakeFeel','wakeFeelVal')"></div>
+    <input type="range" id="wakeFeel" min="0" max="10" value="5" oninput="syncVal('wakeFeel','wakeFeelVal')">
     <button class="save" onclick="saveSleep()">保存睡眠记录</button>
   </div>
 </section>
 
-<!-- ===================== Body（每周）===================== -->
+<!-- ===================== Body ===================== -->
 <section id="body" class="page">
   <div class="card">
-    <div class="section-title">⚖️ 本周身体数据</div>
+    <div class="section-title">本周身体数据</div>
     <label>体重 kg</label>
     <input id="bodyWeight" type="number" step="0.1" placeholder="67.8">
     <label>腰围 cm</label>
@@ -194,51 +342,52 @@ nav button.active{color:var(--accent);}
     <button class="save" onclick="saveBody()">保存本周记录</button>
   </div>
   <div class="card">
-    <div class="section-title">📈 体重趋势</div>
+    <div class="section-title">体重趋势</div>
     <canvas id="weightChart" height="180"></canvas>
   </div>
 </section>
 
-<!-- ===================== Beauty（每周）===================== -->
+<!-- ===================== Beauty ===================== -->
 <section id="beauty" class="page">
   <div class="card">
-    <div class="section-title">✨ Beauty Evolution</div>
+    <div class="section-title">外貌记录</div>
     <label>发量评分 <span class="range-val" id="hairVolVal">5</span></label>
-    <div class="range-row"><input type="range" id="hairVol" min="0" max="10" value="5" oninput="syncVal('hairVol','hairVolVal')"></div>
+    <input type="range" id="hairVol" min="0" max="10" value="5" oninput="syncVal('hairVol','hairVolVal')">
     <label>头油程度 <span class="range-val" id="hairOilVal">5</span></label>
-    <div class="range-row"><input type="range" id="hairOil" min="0" max="10" value="5" oninput="syncVal('hairOil','hairOilVal')"></div>
+    <input type="range" id="hairOil" min="0" max="10" value="5" oninput="syncVal('hairOil','hairOilVal')">
     <label>脱发程度 <span class="range-val" id="hairLossVal">5</span></label>
-    <div class="range-row"><input type="range" id="hairLoss" min="0" max="10" value="5" oninput="syncVal('hairLoss','hairLossVal')"></div>
+    <input type="range" id="hairLoss" min="0" max="10" value="5" oninput="syncVal('hairLoss','hairLossVal')">
     <label>下巴痘 <span class="range-val" id="chinAcneVal">5</span></label>
-    <div class="range-row"><input type="range" id="chinAcne" min="0" max="10" value="5" oninput="syncVal('chinAcne','chinAcneVal')"></div>
+    <input type="range" id="chinAcne" min="0" max="10" value="5" oninput="syncVal('chinAcne','chinAcneVal')">
     <label>皮肤整体状态 <span class="range-val" id="skinStateVal">5</span></label>
-    <div class="range-row"><input type="range" id="skinState" min="0" max="10" value="5" oninput="syncVal('skinState','skinStateVal')"></div>
+    <input type="range" id="skinState" min="0" max="10" value="5" oninput="syncVal('skinState','skinStateVal')">
   </div>
   <div class="card">
-    <div class="section-title">🛍 Shopping Log（可选）</div>
+    <div class="section-title">Shopping Log（可选）</div>
     <input id="shopItem" placeholder="买了什么">
-    <input id="shopPrice" type="number" placeholder="价格" style="margin-top:10px;">
-    <input id="styleTag" placeholder="风格标签" style="margin-top:10px;">
+    <input id="shopPrice" type="number" placeholder="价格" style="margin-top:12px;">
+    <input id="styleTag" placeholder="风格标签" style="margin-top:12px;">
     <button class="save" onclick="saveBeauty()">保存本周记录</button>
   </div>
 </section>
 
-<!-- ===================== Private（密码保护）===================== -->
+<!-- ===================== Private ===================== -->
 <section id="private" class="page">
-  <div id="privateLock" class="card">
-    <div class="section-title">🔒 Private Health</div>
-    <p class="small">替尔泊肽注射记录 · 激素与周期状态</p>
-    <button class="save" onclick="unlockPrivate()">输入密码进入</button>
+  <div id="privateLock" class="card" style="text-align:center;padding:36px 20px;">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="margin:0 auto 12px;display:block;"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    <div class="section-title" style="justify-content:center;">Private Health</div>
+    <p class="empty-note">替尔泊肽注射记录 · 激素与周期状态</p>
+    <button class="save" onclick="unlockPrivate()" style="margin-top:16px;">输入密码进入</button>
   </div>
 
   <div id="privateBox" class="hidden">
     <div class="card">
-      <div class="section-title">💊 Medical Log — 注射记录</div>
+      <div class="section-title">Medical Log — 注射记录</div>
       <label>剂量 mg</label>
       <input id="medDose" type="number" step="0.1" placeholder="2.5">
       <label>注射部位</label>
       <select id="medSite"><option>腹部</option><option>大腿</option><option>手臂</option></select>
-      <div class="section-title" style="margin-top:14px;">副作用（勾选后拖动强度）</div>
+      <div class="section-title" style="margin-top:20px;">副作用（勾选后拖动强度）</div>
       <div id="sideEffectList"></div>
       <label>体感变化描述</label>
       <textarea id="medNote" placeholder="今天的身体感觉..."></textarea>
@@ -246,7 +395,7 @@ nav button.active{color:var(--accent);}
     </div>
 
     <div class="card">
-      <div class="section-title">🌸 Hormone Log</div>
+      <div class="section-title">Hormone Log</div>
       <label>周期状态</label>
       <select id="hormoneStatus">
         <option>长期无自然月经</option>
@@ -262,15 +411,35 @@ nav button.active{color:var(--accent);}
   </div>
 </section>
 
-<div class="fab" onclick="showPage('appetite')">🍩</div>
+<button class="fab" onclick="showPage('appetite')">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+</button>
 
 <nav>
-  <button onclick="showPage('home')" data-page="home">🏠</button>
-  <button onclick="showPage('appetite')" data-page="appetite">🍩</button>
-  <button onclick="showPage('daily')" data-page="daily">✏️</button>
-  <button onclick="showPage('body')" data-page="body">⚖️</button>
-  <button onclick="showPage('beauty')" data-page="beauty">✨</button>
-  <button onclick="showPage('private')" data-page="private">🔒</button>
+  <button onclick="showPage('home')" data-page="home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
+    <span>概览</span>
+  </button>
+  <button onclick="showPage('appetite')" data-page="appetite">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+    <span>食欲</span>
+  </button>
+  <button onclick="showPage('daily')" data-page="daily">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V4h11l5 5v11H4Z"/><path d="M15 4v5h5"/></svg>
+    <span>日常</span>
+  </button>
+  <button onclick="showPage('body')" data-page="body">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 18c1-8 4-11 8-11s7 3 8 11"/></svg>
+    <span>身体</span>
+  </button>
+  <button onclick="showPage('beauty')" data-page="beauty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+    <span>外貌</span>
+  </button>
+  <button onclick="showPage('private')" data-page="private">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    <span>私密</span>
+  </button>
 </nav>
 
 <script>
@@ -278,7 +447,6 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwyKGdAA3KrflVj-41MlfAE
 let privatePwd = "";
 let weightChart = null;
 
-// ---------- 导航 ----------
 function showPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -291,39 +459,31 @@ window.onload = function(){
   buildSideEffectList();
 };
 
-// ---------- 小工具 ----------
 function syncVal(inputId, valId){
   document.getElementById(valId).innerText = document.getElementById(inputId).value;
 }
-function toggleTag(el){
-  el.classList.toggle("active");
-}
+function toggleTag(el){ el.classList.toggle("active"); }
 function collectTags(containerId){
   return Array.from(document.querySelectorAll("#"+containerId+" .tag.active")).map(t=>t.dataset.val).join(",");
 }
 document.addEventListener("click", function(e){
   if(e.target.classList.contains("tag")) toggleTag(e.target);
 });
-function todayStr(){
-  return new Date().toISOString().substring(0,10);
-}
+function todayStr(){ return new Date().toISOString().substring(0,10); }
 function nowTimeStr(){
   const d = new Date();
   return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
 }
 
-// ---------- 通用请求 ----------
 function postData(sheet, data, pwd){
   const body = { sheet, data };
   if(pwd) body.pwd = pwd;
-  return fetch(API_URL, { method:"POST", body: JSON.stringify(body) })
-    .then(res=>res.json());
+  return fetch(API_URL, { method:"POST", body: JSON.stringify(body) }).then(res=>res.json());
 }
 function getData(params){
   return fetch(API_URL + "?" + params).then(res=>res.json());
 }
 
-// ---------- Dashboard ----------
 function loadDashboard(){
   getData("sheet=dashboard").then(d=>{
     if(d.error){ document.getElementById("dashDate").innerText = d.error; return; }
@@ -332,16 +492,14 @@ function loadDashboard(){
     document.getElementById("dashInjection").innerText = (d.injection_day_offset!==null && d.injection_day_offset!=="") ? "第"+d.injection_day_offset+"天" : "--";
     document.getElementById("dashSleep").innerText = d.sleep_hours ? d.sleep_hours+"h" : "--";
     document.getElementById("dashAppetite").innerText = d.appetite_peak_0_10 ? d.appetite_peak_0_10+"/10" : "--";
-    document.getElementById("dashTrigger").innerText = d.appetite_main_trigger ? "主因：" + d.appetite_main_trigger : "";
+    document.getElementById("dashTrigger").innerText = d.appetite_main_trigger ? "主因："+d.appetite_main_trigger : "";
     document.getElementById("dashBeauty").innerText = d.beauty_trend_note || "暂无本周数据";
   }).catch(()=>{ document.getElementById("dashDate").innerText = "同步失败"; });
 }
 
-// ---------- Appetite ----------
 function saveAppetite(){
   const data = {
-    date: todayStr(),
-    time: nowTimeStr(),
+    date: todayStr(), time: nowTimeStr(),
     hunger_0_10: document.getElementById("apHunger").value,
     fatigue_0_10: document.getElementById("apFatigue").value,
     stress_0_10: document.getElementById("apStress").value,
@@ -354,31 +512,28 @@ function saveAppetite(){
     note: document.getElementById("apNote").value
   };
   postData("Appetite_Log", data).then(r=>{
-    if(r.error){ alert("❌ "+r.error); return; }
-    alert("✅ 已记录");
+    if(r.error){ alert(r.error); return; }
+    alert("已记录");
     document.getElementById("apNote").value = "";
     document.querySelectorAll("#apWantTypeTags .tag, #apTriggerTags .tag").forEach(t=>t.classList.remove("active"));
-  }).catch(()=>alert("❌ 保存失败，请检查网络"));
+  }).catch(()=>alert("保存失败，请检查网络"));
 }
 
-// ---------- Daily: Food ----------
 function saveFood(){
   const data = {
-    date: todayStr(),
-    time: nowTimeStr(),
+    date: todayStr(), time: nowTimeStr(),
     food: document.getElementById("foodName").value,
     joy_level_0_10: document.getElementById("foodJoy").value,
     satisfaction_0_10: document.getElementById("foodSatis").value,
     regret_0_10: document.getElementById("foodRegret").value
   };
   postData("Food_Log", data).then(r=>{
-    if(r.error){ alert("❌ "+r.error); return; }
-    alert("✅ 已保存饮食记录");
+    if(r.error){ alert(r.error); return; }
+    alert("已保存饮食记录");
     document.getElementById("foodName").value = "";
-  }).catch(()=>alert("❌ 保存失败"));
+  }).catch(()=>alert("保存失败"));
 }
 
-// ---------- Daily: Sleep ----------
 function saveSleep(){
   const data = {
     date: todayStr(),
@@ -389,12 +544,11 @@ function saveSleep(){
     source: "manual"
   };
   postData("Sleep_Log", data).then(r=>{
-    if(r.error){ alert("❌ "+r.error); return; }
-    alert("✅ 已保存睡眠记录");
-  }).catch(()=>alert("❌ 保存失败"));
+    if(r.error){ alert(r.error); return; }
+    alert("已保存睡眠记录");
+  }).catch(()=>alert("保存失败"));
 }
 
-// ---------- Body ----------
 function saveBody(){
   const data = {
     date: todayStr(),
@@ -403,10 +557,10 @@ function saveBody(){
     hip_cm: document.getElementById("bodyHip").value
   };
   postData("Body_Log", data).then(r=>{
-    if(r.error){ alert("❌ "+r.error); return; }
-    alert("✅ 已保存本周身体数据");
+    if(r.error){ alert(r.error); return; }
+    alert("已保存本周身体数据");
     loadBodyChart();
-  }).catch(()=>alert("❌ 保存失败"));
+  }).catch(()=>alert("保存失败"));
 }
 function loadBodyChart(){
   getData("sheet=Body_Log").then(rows=>{
@@ -417,13 +571,12 @@ function loadBodyChart(){
     if(weightChart) weightChart.destroy();
     weightChart = new Chart(canvas, {
       type:"line",
-      data:{ labels, datasets:[{ label:"体重 kg", data:values, borderColor:"#7b8cff", borderWidth:2, tension:.3 }] },
-      options:{ responsive:true, plugins:{ legend:{ display:true } } }
+      data:{ labels, datasets:[{ label:"体重 kg", data:values, borderColor:"#3a3a3c", backgroundColor:"rgba(58,58,60,.06)", fill:true, borderWidth:2, tension:.3, pointRadius:3 }] },
+      options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ grid:{ color:"#eee" } }, x:{ grid:{ display:false } } } }
     });
   }).catch(()=>{});
 }
 
-// ---------- Beauty ----------
 function saveBeauty(){
   const data = {
     date: todayStr(),
@@ -437,21 +590,20 @@ function saveBeauty(){
     style_tag: document.getElementById("styleTag").value
   };
   postData("Beauty_Log", data).then(r=>{
-    if(r.error){ alert("❌ "+r.error); return; }
-    alert("✅ 已保存本周记录");
-  }).catch(()=>alert("❌ 保存失败"));
+    if(r.error){ alert(r.error); return; }
+    alert("已保存本周记录");
+  }).catch(()=>alert("保存失败"));
 }
 
-// ---------- Private ----------
 function unlockPrivate(){
   const pwd = prompt("请输入密码");
   if(!pwd) return;
   privatePwd = pwd;
   getData("sheet=Medical_Log&pwd="+encodeURIComponent(pwd)).then(r=>{
-    if(r.error){ alert("❌ 密码错误"); privatePwd=""; return; }
+    if(r.error){ alert("密码错误"); privatePwd=""; return; }
     document.getElementById("privateLock").classList.add("hidden");
     document.getElementById("privateBox").classList.remove("hidden");
-  }).catch(()=>alert("❌ 校验失败"));
+  }).catch(()=>alert("校验失败"));
 }
 function buildSideEffectList(){
   const types = ["恶心","便秘","乏力","头晕","其他"];
@@ -463,7 +615,7 @@ function buildSideEffectList(){
         <input type="checkbox" class="se-check" data-type="${t}">
         <span>${t}</span>
       </div>
-      <div class="range-row hidden se-range-row">
+      <div class="se-range-row hidden">
         <input type="range" min="0" max="10" value="5" class="se-range" data-type="${t}">
         <span class="range-val se-val">5</span>
       </div>`;
@@ -499,10 +651,10 @@ function saveMedical(){
     body_feel_note: document.getElementById("medNote").value
   };
   postData("Medical_Log", data, privatePwd).then(r=>{
-    if(r.error){ alert("❌ "+r.error); return; }
-    alert("✅ 已保存注射记录");
+    if(r.error){ alert(r.error); return; }
+    alert("已保存注射记录");
     document.getElementById("medNote").value = "";
-  }).catch(()=>alert("❌ 保存失败"));
+  }).catch(()=>alert("保存失败"));
 }
 function saveHormone(){
   const data = {
@@ -512,11 +664,11 @@ function saveHormone(){
     note: document.getElementById("hormoneNote").value
   };
   postData("Hormone_Log", data, privatePwd).then(r=>{
-    if(r.error){ alert("❌ "+r.error); return; }
-    alert("✅ 已保存记录");
+    if(r.error){ alert(r.error); return; }
+    alert("已保存记录");
     document.getElementById("hormoneReason").value = "";
     document.getElementById("hormoneNote").value = "";
-  }).catch(()=>alert("❌ 保存失败"));
+  }).catch(()=>alert("保存失败"));
 }
 </script>
 </body>
