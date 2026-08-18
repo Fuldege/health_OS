@@ -1,662 +1,230 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Jing Health OS</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-:root{
-  --navy:#1c3357;
-  --navy-deep:#132542;
-  --navy-soft:#e7ecf3;
-  --blue:#dfeefb;
-  --blue-text:#2f6fa3;
-  --green:#e3f3e8;
-  --green-text:#3f8b5c;
-  --bg:#f2f4f7;
-  --card:#ffffff;
-  --text:#1a2233;
-  --sub:#8992a3;
-  --line:#e6e9ef;
-  --danger:#c65a4f;
-  --radius:16px;
-  --nav-h:68px;
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html{height:100%;}
-body{
-  min-height:100%;
-  margin:0;
-  padding-bottom:calc(var(--nav-h) + 34px + env(safe-area-inset-bottom));
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  -webkit-overflow-scrolling:touch;
-}
-.header{padding:26px 20px 14px;}
-.header h1{margin:0;font-size:19px;font-weight:700;color:var(--navy);letter-spacing:.2px;}
-.header p{color:var(--sub);margin:4px 0 0;font-size:12px;letter-spacing:.4px;text-transform:uppercase;}
+// ========================================
+// Jing Health OS - Apps Script API
+// ========================================
 
-.page{display:none;padding:0 16px;max-width:520px;margin:0 auto;}
-.page.active{display:block;}
+const SHEETS = ['Appetite_Log', 'Medical_Log', 'Body_Log', 'Hormone_Log',
+                 'Sleep_Log', 'Food_Log', 'Beauty_Log', 'Daily_Status'];
+const PRIVATE_SHEETS = ['Medical_Log', 'Hormone_Log'];
+const PRIVATE_PWD = 'jing';
 
-.card{
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:20px;
-  margin-bottom:12px;
-  border:1px solid var(--line);
-}
-.card h2{margin:0 0 4px;font-size:17px;font-weight:700;color:var(--navy);}
-
-.hero{background:var(--navy);border:none;}
-.hero h2{color:#fff;}
-.hero .hero-top{display:flex;justify-content:space-between;align-items:flex-start;}
-.hero-date{color:rgba(255,255,255,.6);font-size:12.5px;margin-top:2px;}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;}
-.hero-stat-label{font-size:11.5px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.4px;}
-.hero-stat-value{font-size:26px;font-weight:700;margin-top:4px;color:#fff;}
-
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.stat-card{padding-bottom:16px;}
-.stat-label{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--sub);margin-bottom:8px;}
-.stat-label svg{width:16px;height:16px;color:var(--blue-text);}
-.stat-value{font-size:20px;font-weight:700;color:var(--navy);}
-.stat-sub{font-size:12px;color:var(--sub);margin-top:4px;}
-
-label{
-  display:flex;justify-content:space-between;
-  margin-top:16px;
-  font-size:12.5px;
-  color:var(--sub);
-  font-weight:500;
-}
-label:first-of-type{margin-top:0;}
-.section-title{
-  font-size:13px;
-  font-weight:700;
-  color:var(--navy);
-  text-transform:uppercase;
-  letter-spacing:.4px;
-  margin:0 0 14px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.section-title svg{width:15px;height:15px;color:var(--blue-text);}
-
-input,select,textarea{
-  width:100%;
-  padding:12px 13px;
-  margin-top:7px;
-  border-radius:11px;
-  border:1px solid var(--line);
-  font-size:15px;
-  background:#f7f9fc;
-  color:var(--text);
-  font-family:inherit;
-}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--navy);background:#fff;}
-textarea{height:74px;resize:none;}
-
-input[type=range]{accent-color:var(--navy);padding:0;margin-top:8px;height:4px;}
-.range-val{font-weight:700;color:var(--navy);font-size:12.5px;}
-
-button{
-  border:none;padding:12px 16px;border-radius:11px;
-  background:var(--blue);color:var(--blue-text);
-  font-size:14px;cursor:pointer;font-weight:600;font-family:inherit;
-}
-.save{width:100%;background:var(--navy);color:#fff;margin-top:18px;font-weight:700;font-size:14.5px;padding:13px;}
-.save:active{opacity:.85;}
-.save.danger{background:var(--danger);}
-
-.tag{
-  display:inline-flex;align-items:center;
-  padding:8px 14px;
-  background:var(--blue);
-  border:1px solid transparent;
-  border-radius:20px;
-  margin:0 6px 6px 0;
-  font-size:13px;cursor:pointer;user-select:none;
-  color:var(--blue-text);font-weight:500;
-}
-.tag.active{background:var(--navy);color:#fff;}
-
-.fab{
-  position:fixed;right:18px;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom));
-  width:54px;height:54px;border-radius:50%;
-  background:var(--navy);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 8px 20px rgba(28,51,87,.35);
-  z-index:20;border:none;cursor:pointer;
-}
-.fab svg{width:24px;height:24px;}
-
-nav{
-  position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
-  padding-bottom:env(safe-area-inset-bottom);
-  background:#ffffff;
-  border-top:1px solid var(--line);
-  display:flex;justify-content:space-around;align-items:center;
-  z-index:30;
-}
-nav button{
-  background:none;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  color:var(--sub);padding:6px 10px;
-}
-nav button svg{width:21px;height:21px;}
-nav button span{font-size:10px;letter-spacing:.2px;}
-nav button.active{color:var(--navy);}
-nav button.active svg{color:var(--navy);}
-
-.hidden{display:none;}
-.checkbox-row{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:13.5px;}
-.checkbox-row input[type=checkbox]{width:17px;height:17px;margin:0;accent-color:var(--navy);}
-.se-range-row{margin-top:8px;}
-
-.empty-note{color:var(--sub);font-size:13px;line-height:1.5;}
-.lock-icon{width:26px;height:26px;color:var(--blue-text);margin-bottom:10px;}
-.badge-green{display:inline-block;background:var(--green);color:var(--green-text);font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;margin-left:6px;}
-</style>
-</head>
-<body>
-
-<header class="header">
-  <h1>Jing Health OS</h1>
-  <p>Body · Behavior · Health · Beauty</p>
-</header>
-
-<!-- ===================== Dashboard ===================== -->
-<section id="home" class="page active">
-  <div class="card hero">
-    <div class="hero-top">
-      <div>
-        <h2>今日状态</h2>
-        <div class="hero-date" id="dashDate">--</div>
-      </div>
-    </div>
-    <div class="hero-grid">
-      <div>
-        <div class="hero-stat-label">7日平均体重</div>
-        <div class="hero-stat-value" id="dashWeight">--</div>
-      </div>
-      <div>
-        <div class="hero-stat-label">距上次注射</div>
-        <div class="hero-stat-value" id="dashInjection">--</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="grid">
-    <div class="card stat-card">
-      <div class="stat-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
-        睡眠
-      </div>
-      <div class="stat-value" id="dashSleep">--</div>
-    </div>
-    <div class="card stat-card">
-      <div class="stat-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-        今日食欲峰值
-      </div>
-      <div class="stat-value" id="dashAppetite">--</div>
-      <div class="stat-sub" id="dashTrigger"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="section-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 15c2-6 6-9 8-9s6 3 8 9"/><path d="M4 15c0 3 3.5 5 8 5s8-2 8-5"/></svg>
-      外貌趋势
-    </div>
-    <div class="empty-note" id="dashBeauty">--</div>
-  </div>
-
-  <div class="card">
-    <div class="section-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3a5 5 0 0 0-5 5c0 2 1 3 1 5v2h8v-2c0-2 1-3 1-5a5 5 0 0 0-5-5Z"/><path d="M10 18h4M11 21h2"/></svg>
-      AI Health Coach
-    </div>
-    <p class="empty-note" id="aiText">数据积累中，暂无分析建议。</p>
-  </div>
-</section>
-
-<!-- ===================== Appetite ===================== -->
-<section id="appetite" class="page">
-  <div class="card">
-    <h2>现在，想吃点什么？</h2>
-    <p class="empty-note" style="margin:4px 0 0;">随时记录，越快越好，不用等到"吃完"再补。</p>
-  </div>
-
-  <div class="card">
-    <div class="section-title">身体状态</div>
-    <label>饥饿感 <span class="range-val" id="apHungerVal">5</span></label>
-    <input type="range" id="apHunger" min="0" max="10" value="5" oninput="syncVal('apHunger','apHungerVal')">
-    <label>疲劳 <span class="range-val" id="apFatigueVal">5</span></label>
-    <input type="range" id="apFatigue" min="0" max="10" value="5" oninput="syncVal('apFatigue','apFatigueVal')">
-    <label>压力 <span class="range-val" id="apStressVal">5</span></label>
-    <input type="range" id="apStress" min="0" max="10" value="5" oninput="syncVal('apStress','apStressVal')">
-  </div>
-
-  <div class="card">
-    <div class="section-title">想吃什么类型（可多选）</div>
-    <div id="apWantTypeTags">
-      <span class="tag" data-val="甜">甜</span>
-      <span class="tag" data-val="咸">咸</span>
-      <span class="tag" data-val="冰">冰</span>
-      <span class="tag" data-val="奶">奶</span>
-      <span class="tag" data-val="正餐">正餐</span>
-    </div>
-    <label style="margin-top:18px;">想吃强度 <span class="range-val" id="apIntensityVal">5</span></label>
-    <input type="range" id="apIntensity" min="0" max="10" value="5" oninput="syncVal('apIntensity','apIntensityVal')">
-  </div>
-
-  <div class="card">
-    <div class="section-title">触发原因（可多选）</div>
-    <div id="apTriggerTags">
-      <span class="tag" data-val="真的饿">真的饿</span>
-      <span class="tag" data-val="工作压力">工作压力</span>
-      <span class="tag" data-val="疲劳">疲劳</span>
-      <span class="tag" data-val="无聊">无聊</span>
-      <span class="tag" data-val="奖励自己">奖励自己</span>
-      <span class="tag" data-val="看到食物">看到食物</span>
-      <span class="tag" data-val="习惯">习惯</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="section-title">最终行为</div>
-    <select id="apAction">
-      <option>没有吃</option>
-      <option>吃了一点</option>
-      <option>正常吃</option>
-      <option>暴食</option>
-    </select>
-    <label>满足感 <span class="range-val" id="apSatisVal">5</span></label>
-    <input type="range" id="apSatis" min="0" max="10" value="5" oninput="syncVal('apSatis','apSatisVal')">
-    <label>后悔感 <span class="range-val" id="apRegretVal">5</span></label>
-    <input type="range" id="apRegret" min="0" max="10" value="5" oninput="syncVal('apRegret','apRegretVal')">
-    <textarea id="apNote" placeholder="备注（可选）" style="margin-top:16px;"></textarea>
-    <button class="save" onclick="saveAppetite()">保存这次记录</button>
-  </div>
-</section>
-
-<!-- ===================== Daily ===================== -->
-<section id="daily" class="page">
-  <div class="card">
-    <div class="section-title">今日饮食</div>
-    <label>吃了什么</label>
-    <input id="foodName" placeholder="例如：便利店三明治">
-    <label>快乐程度 <span class="range-val" id="foodJoyVal">5</span></label>
-    <input type="range" id="foodJoy" min="0" max="10" value="5" oninput="syncVal('foodJoy','foodJoyVal')">
-    <label>满足感 <span class="range-val" id="foodSatisVal">5</span></label>
-    <input type="range" id="foodSatis" min="0" max="10" value="5" oninput="syncVal('foodSatis','foodSatisVal')">
-    <label>后悔感 <span class="range-val" id="foodRegretVal">5</span></label>
-    <input type="range" id="foodRegret" min="0" max="10" value="5" oninput="syncVal('foodRegret','foodRegretVal')">
-    <button class="save" onclick="saveFood()">保存饮食记录</button>
-  </div>
-
-  <div class="card">
-    <div class="section-title">睡眠</div>
-    <label>睡眠小时</label>
-    <input id="sleepHours" type="number" step="0.1" placeholder="7.5">
-    <label>深睡分钟</label>
-    <input id="deepMin" type="number" placeholder="60">
-    <label>REM分钟</label>
-    <input id="remMin" type="number" placeholder="90">
-    <label>起床精神 <span class="range-val" id="wakeFeelVal">5</span></label>
-    <input type="range" id="wakeFeel" min="0" max="10" value="5" oninput="syncVal('wakeFeel','wakeFeelVal')">
-    <button class="save" onclick="saveSleep()">保存睡眠记录</button>
-  </div>
-</section>
-
-<!-- ===================== Body ===================== -->
-<section id="body" class="page">
-  <div class="card">
-    <div class="section-title">本周身体数据</div>
-    <label>体重 kg</label>
-    <input id="bodyWeight" type="number" step="0.1" placeholder="67.8">
-    <label>腰围 cm</label>
-    <input id="bodyWaist" type="number" step="0.1" placeholder="80">
-    <label>臀围 cm</label>
-    <input id="bodyHip" type="number" step="0.1" placeholder="98">
-    <button class="save" onclick="saveBody()">保存本周记录</button>
-  </div>
-  <div class="card">
-    <div class="section-title">体重趋势</div>
-    <canvas id="weightChart" height="180"></canvas>
-  </div>
-</section>
-
-<!-- ===================== Beauty ===================== -->
-<section id="beauty" class="page">
-  <div class="card">
-    <div class="section-title">外貌记录</div>
-    <label>发量评分 <span class="range-val" id="hairVolVal">5</span></label>
-    <input type="range" id="hairVol" min="0" max="10" value="5" oninput="syncVal('hairVol','hairVolVal')">
-    <label>头油程度 <span class="range-val" id="hairOilVal">5</span></label>
-    <input type="range" id="hairOil" min="0" max="10" value="5" oninput="syncVal('hairOil','hairOilVal')">
-    <label>脱发程度 <span class="range-val" id="hairLossVal">5</span></label>
-    <input type="range" id="hairLoss" min="0" max="10" value="5" oninput="syncVal('hairLoss','hairLossVal')">
-    <label>下巴痘 <span class="range-val" id="chinAcneVal">5</span></label>
-    <input type="range" id="chinAcne" min="0" max="10" value="5" oninput="syncVal('chinAcne','chinAcneVal')">
-    <label>皮肤整体状态 <span class="range-val" id="skinStateVal">5</span></label>
-    <input type="range" id="skinState" min="0" max="10" value="5" oninput="syncVal('skinState','skinStateVal')">
-  </div>
-  <div class="card">
-    <div class="section-title">Shopping Log（可选）</div>
-    <input id="shopItem" placeholder="买了什么">
-    <input id="shopPrice" type="number" placeholder="价格" style="margin-top:12px;">
-    <input id="styleTag" placeholder="风格标签" style="margin-top:12px;">
-    <button class="save" onclick="saveBeauty()">保存本周记录</button>
-  </div>
-</section>
-
-<!-- ===================== Private ===================== -->
-<section id="private" class="page">
-  <div id="privateLock" class="card" style="text-align:center;padding:36px 20px;">
-    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="margin:0 auto 12px;display:block;"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-    <div class="section-title" style="justify-content:center;">Private Health</div>
-    <p class="empty-note">替尔泊肽注射记录 · 激素与周期状态</p>
-    <button class="save" onclick="unlockPrivate()" style="margin-top:16px;">输入密码进入</button>
-  </div>
-
-  <div id="privateBox" class="hidden">
-    <div class="card">
-      <div class="section-title">Medical Log — 注射记录</div>
-      <label>剂量 mg</label>
-      <input id="medDose" type="number" step="0.1" placeholder="2.5">
-      <label>注射部位</label>
-      <select id="medSite"><option>腹部</option><option>大腿</option><option>手臂</option></select>
-      <div class="section-title" style="margin-top:20px;">副作用（勾选后拖动强度）</div>
-      <div id="sideEffectList"></div>
-      <label>体感变化描述</label>
-      <textarea id="medNote" placeholder="今天的身体感觉..."></textarea>
-      <button class="save" onclick="saveMedical()">保存注射记录</button>
-    </div>
-
-    <div class="card">
-      <div class="section-title">Hormone Log</div>
-      <label>周期状态</label>
-      <select id="hormoneStatus">
-        <option>长期无自然月经</option>
-        <option>点滴</option>
-        <option>自然月经</option>
-        <option>药物诱导出血</option>
-      </select>
-      <label>原因</label>
-      <input id="hormoneReason" placeholder="例如：黄体酮诱导">
-      <textarea id="hormoneNote" placeholder="备注（可选）"></textarea>
-      <button class="save" onclick="saveHormone()">保存记录</button>
-    </div>
-  </div>
-</section>
-
-<button class="fab" onclick="showPage('appetite')">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
-</button>
-
-<nav>
-  <button onclick="showPage('home')" data-page="home">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
-    <span>概览</span>
-  </button>
-  <button onclick="showPage('appetite')" data-page="appetite">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-    <span>食欲</span>
-  </button>
-  <button onclick="showPage('daily')" data-page="daily">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V4h11l5 5v11H4Z"/><path d="M15 4v5h5"/></svg>
-    <span>日常</span>
-  </button>
-  <button onclick="showPage('body')" data-page="body">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 18c1-8 4-11 8-11s7 3 8 11"/></svg>
-    <span>身体</span>
-  </button>
-  <button onclick="showPage('beauty')" data-page="beauty">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
-    <span>外貌</span>
-  </button>
-  <button onclick="showPage('private')" data-page="private">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-    <span>私密</span>
-  </button>
-</nav>
-
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwyKGdAA3KrflVj-41MlfAEqZTfdehhZGNUFfTeNDecMd3wavntnPA7LSjb_nrEeVOiYg/exec";
-let privatePwd = "";
-let weightChart = null;
-
-function showPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active", b.dataset.page===id));
-  window.scrollTo(0,0);
-  if(id==="home") loadDashboard();
-  if(id==="body") loadBodyChart();
-}
-window.onload = function(){
-  showPage("home");
-  buildSideEffectList();
+const PHOTO_FIELD_MAP = {
+  'Beauty_Log': 'hair_part_photo_url',
+  'Body_Log': 'photo_url'
 };
+const PHOTO_FOLDER_NAME = 'Jing Health OS Photos';
 
-function syncVal(inputId, valId){
-  document.getElementById(valId).innerText = document.getElementById(inputId).value;
-}
-function toggleTag(el){ el.classList.toggle("active"); }
-function collectTags(containerId){
-  return Array.from(document.querySelectorAll("#"+containerId+" .tag.active")).map(t=>t.dataset.val).join(",");
-}
-document.addEventListener("click", function(e){
-  if(e.target.classList.contains("tag")) toggleTag(e.target);
-});
-function todayStr(){ return new Date().toISOString().substring(0,10); }
-function nowTimeStr(){
-  const d = new Date();
-  return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
-}
+function doGet(e) {
+  try {
+    const params = e.parameter;
+    const sheetName = params.sheet || 'Appetite_Log';
 
-function postData(sheet, data, pwd){
-  const body = { sheet, data };
-  if(pwd) body.pwd = pwd;
-  return fetch(API_URL, { method:"POST", body: JSON.stringify(body) }).then(res=>res.json());
-}
-function getData(params){
-  return fetch(API_URL + "?" + params).then(res=>res.json());
-}
+    if (sheetName === 'dashboard') {
+      return jsonOutput(buildDashboard());
+    }
 
-function loadDashboard(){
-  getData("sheet=dashboard").then(d=>{
-    if(d.error){ document.getElementById("dashDate").innerText = d.error; return; }
-    document.getElementById("dashDate").innerText = d.date || "--";
-    document.getElementById("dashWeight").innerText = d.avg_weight_7d ? d.avg_weight_7d+" kg" : "--";
-    document.getElementById("dashInjection").innerText = (d.injection_day_offset!==null && d.injection_day_offset!=="") ? "第"+d.injection_day_offset+"天" : "--";
-    document.getElementById("dashSleep").innerText = d.sleep_hours ? d.sleep_hours+"h" : "--";
-    document.getElementById("dashAppetite").innerText = d.appetite_peak_0_10 ? d.appetite_peak_0_10+"/10" : "--";
-    document.getElementById("dashTrigger").innerText = d.appetite_main_trigger ? "主因："+d.appetite_main_trigger : "";
-    document.getElementById("dashBeauty").innerText = d.beauty_trend_note || "暂无本周数据";
-  }).catch(()=>{ document.getElementById("dashDate").innerText = "同步失败"; });
+    if (!SHEETS.includes(sheetName)) {
+      return jsonOutput({ error: '未知的 sheet: ' + sheetName });
+    }
+    if (PRIVATE_SHEETS.includes(sheetName) && params.pwd !== PRIVATE_PWD) {
+      return jsonOutput({ error: '密码错误，无权访问该表' });
+    }
+
+    let rows = readSheet(sheetName);
+
+    if (params.range && /^(\d+)d$/.test(params.range)) {
+      const days = parseInt(params.range.match(/^(\d+)d$/)[1], 10);
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - days);
+      rows = rows.filter(r => r.date && new Date(r.date) >= cutoff);
+    }
+
+    return jsonOutput(rows);
+  } catch (err) {
+    return jsonOutput({ error: err.message });
+  }
 }
 
-function saveAppetite(){
-  const data = {
-    date: todayStr(), time: nowTimeStr(),
-    hunger_0_10: document.getElementById("apHunger").value,
-    fatigue_0_10: document.getElementById("apFatigue").value,
-    stress_0_10: document.getElementById("apStress").value,
-    want_type: collectTags("apWantTypeTags"),
-    intensity_0_10: document.getElementById("apIntensity").value,
-    trigger: collectTags("apTriggerTags"),
-    action: document.getElementById("apAction").value,
-    satisfaction_0_10: document.getElementById("apSatis").value,
-    regret_0_10: document.getElementById("apRegret").value,
-    note: document.getElementById("apNote").value
-  };
-  postData("Appetite_Log", data).then(r=>{
-    if(r.error){ alert(r.error); return; }
-    alert("已记录");
-    document.getElementById("apNote").value = "";
-    document.querySelectorAll("#apWantTypeTags .tag, #apTriggerTags .tag").forEach(t=>t.classList.remove("active"));
-  }).catch(()=>alert("保存失败，请检查网络"));
+function doPost(e) {
+  try {
+    const body = JSON.parse(e.postData.contents);
+    const sheetName = body.sheet;
+    const data = body.data || {};
+
+    if (!SHEETS.includes(sheetName)) {
+      return jsonOutput({ error: '未知的 sheet: ' + sheetName });
+    }
+    if (PRIVATE_SHEETS.includes(sheetName) && body.pwd !== PRIVATE_PWD) {
+      return jsonOutput({ error: '密码错误，无权写入该表' });
+    }
+
+    const result = appendRow(sheetName, data);
+    return jsonOutput({ success: true, row: result });
+  } catch (err) {
+    return jsonOutput({ error: err.message });
+  }
 }
 
-function saveFood(){
-  const data = {
-    date: todayStr(), time: nowTimeStr(),
-    food: document.getElementById("foodName").value,
-    joy_level_0_10: document.getElementById("foodJoy").value,
-    satisfaction_0_10: document.getElementById("foodSatis").value,
-    regret_0_10: document.getElementById("foodRegret").value
-  };
-  postData("Food_Log", data).then(r=>{
-    if(r.error){ alert(r.error); return; }
-    alert("已保存饮食记录");
-    document.getElementById("foodName").value = "";
-  }).catch(()=>alert("保存失败"));
+// ---------- 核心读写 ----------
+
+function getSheet(name) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(name);
+  if (!sheet) throw new Error('找不到 sheet: ' + name);
+  return sheet;
 }
 
-function saveSleep(){
-  const data = {
-    date: todayStr(),
-    sleep_hours: document.getElementById("sleepHours").value,
-    deep_min: document.getElementById("deepMin").value,
-    rem_min: document.getElementById("remMin").value,
-    wake_feeling_0_10: document.getElementById("wakeFeel").value,
-    source: "manual"
-  };
-  postData("Sleep_Log", data).then(r=>{
-    if(r.error){ alert(r.error); return; }
-    alert("已保存睡眠记录");
-  }).catch(()=>alert("保存失败"));
+function readSheet(name) {
+  const sheet = getSheet(name);
+  const values = sheet.getDataRange().getDisplayValues();
+  if (values.length < 2) return [];
+  const headers = values[0];
+  const rows = [];
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    if (row.every(c => c === '')) continue;
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h] = row[idx]; });
+    rows.push(obj);
+  }
+  return rows;
 }
 
-function saveBody(){
-  const data = {
-    date: todayStr(),
-    weight_kg: document.getElementById("bodyWeight").value,
-    waist_cm: document.getElementById("bodyWaist").value,
-    hip_cm: document.getElementById("bodyHip").value
-  };
-  postData("Body_Log", data).then(r=>{
-    if(r.error){ alert(r.error); return; }
-    alert("已保存本周身体数据");
-    loadBodyChart();
-  }).catch(()=>alert("保存失败"));
-}
-function loadBodyChart(){
-  getData("sheet=Body_Log").then(rows=>{
-    rows = rows.filter(r=>r.date && r.weight_kg);
-    const labels = rows.map(r=>r.date);
-    const values = rows.map(r=>Number(r.weight_kg));
-    const canvas = document.getElementById("weightChart");
-    if(weightChart) weightChart.destroy();
-    weightChart = new Chart(canvas, {
-      type:"line",
-      data:{ labels, datasets:[{ label:"体重 kg", data:values, borderColor:"#1c3357", backgroundColor:"rgba(28,51,87,.08)", fill:true, borderWidth:2, tension:.3, pointRadius:3, pointBackgroundColor:"#1c3357" }] },
-      options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ grid:{ color:"#eee" } }, x:{ grid:{ display:false } } } }
-    });
-  }).catch(()=>{});
-}
+function appendRow(name, data) {
+  const sheet = getSheet(name);
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
 
-function saveBeauty(){
-  const data = {
-    date: todayStr(),
-    hair_volume_0_10: document.getElementById("hairVol").value,
-    hair_oil_0_10: document.getElementById("hairOil").value,
-    hair_loss_0_10: document.getElementById("hairLoss").value,
-    chin_acne_0_10: document.getElementById("chinAcne").value,
-    skin_state_0_10: document.getElementById("skinState").value,
-    shopping_item: document.getElementById("shopItem").value,
-    shopping_price: document.getElementById("shopPrice").value,
-    style_tag: document.getElementById("styleTag").value
-  };
-  postData("Beauty_Log", data).then(r=>{
-    if(r.error){ alert(r.error); return; }
-    alert("已保存本周记录");
-  }).catch(()=>alert("保存失败"));
-}
+  // 图片上传：base64 转存 Drive，只把链接写进表格
+  if (data.photo_base64) {
+    const field = PHOTO_FIELD_MAP[name];
+    if (field) {
+      data[field] = savePhotoAndGetUrl(data.photo_base64);
+    }
+    delete data.photo_base64;
+  }
 
-function unlockPrivate(){
-  const pwd = prompt("请输入密码");
-  if(!pwd) return;
-  privatePwd = pwd;
-  getData("sheet=Medical_Log&pwd="+encodeURIComponent(pwd)).then(r=>{
-    if(r.error){ alert("密码错误"); privatePwd=""; return; }
-    document.getElementById("privateLock").classList.add("hidden");
-    document.getElementById("privateBox").classList.remove("hidden");
-  }).catch(()=>alert("校验失败"));
-}
-function buildSideEffectList(){
-  const types = ["恶心","便秘","乏力","头晕","其他"];
-  const container = document.getElementById("sideEffectList");
-  types.forEach(t=>{
-    const wrap = document.createElement("div");
-    wrap.innerHTML = `
-      <div class="checkbox-row">
-        <input type="checkbox" class="se-check" data-type="${t}">
-        <span>${t}</span>
-      </div>
-      <div class="se-range-row hidden">
-        <input type="range" min="0" max="10" value="5" class="se-range" data-type="${t}">
-        <span class="range-val se-val">5</span>
-      </div>`;
-    container.appendChild(wrap);
+  if (headers.includes('id') && !data.id) {
+    data.id = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMddHHmmss');
+  }
+  if (headers.includes('date') && !data.date) {
+    data.date = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  }
+
+  if (name === 'Appetite_Log' && !data.injection_day_offset) {
+    data.injection_day_offset = computeInjectionDayOffset(data.date);
+  }
+  if (name === 'Medical_Log' && !data.cycle_index) {
+    data.cycle_index = countMedicalEntriesBefore(data.date) + 1;
+  }
+  if (name === 'Body_Log' && !data.avg_weight_7d) {
+    data.avg_weight_7d = computeAvgWeight7d(data.date, data.weight_kg);
+  }
+
+  const row = headers.map(h => {
+    let v = data[h] !== undefined ? data[h] : '';
+    if ((h === 'date' || h === 'time') && v !== '') v = "'" + v;
+    return v;
   });
-  container.addEventListener("change", e=>{
-    if(e.target.classList.contains("se-check")){
-      const row = e.target.closest("div").nextElementSibling;
-      row.classList.toggle("hidden", !e.target.checked);
+  sheet.appendRow(row);
+  return data;
+}
+
+// ---------- 图片存储 ----------
+
+function getOrCreatePhotoFolder() {
+  const folders = DriveApp.getFoldersByName(PHOTO_FOLDER_NAME);
+  if (folders.hasNext()) return folders.next();
+  return DriveApp.createFolder(PHOTO_FOLDER_NAME);
+}
+
+function savePhotoAndGetUrl(base64DataUrl) {
+  const matches = base64DataUrl.match(/^data:(image\/\w+);base64,(.+)$/);
+  if (!matches) throw new Error('图片格式不正确');
+  const mimeType = matches[1];
+  const base64Data = matches[2];
+  const bytes = Utilities.base64Decode(base64Data);
+  const blob = Utilities.newBlob(bytes, mimeType, 'photo_' + new Date().getTime());
+  const folder = getOrCreatePhotoFolder();
+  const file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return 'https://drive.google.com/uc?export=view&id=' + file.getId();
+}
+
+// ---------- 特殊计算 ----------
+
+function computeInjectionDayOffset(dateStr) {
+  const medRows = readSheet('Medical_Log');
+  if (medRows.length === 0) return '';
+  const target = new Date(dateStr);
+  let latest = null;
+  medRows.forEach(r => {
+    const d = new Date(r.date);
+    if (d <= target && (!latest || d > latest)) latest = d;
+  });
+  if (!latest) return '';
+  return Math.round((target - latest) / (1000 * 60 * 60 * 24));
+}
+
+function countMedicalEntriesBefore(dateStr) {
+  const medRows = readSheet('Medical_Log');
+  const target = new Date(dateStr);
+  return medRows.filter(r => new Date(r.date) <= target).length;
+}
+
+function computeAvgWeight7d(dateStr, currentWeight) {
+  const bodyRows = readSheet('Body_Log');
+  const target = new Date(dateStr);
+  const cutoff = new Date(target);
+  cutoff.setDate(cutoff.getDate() - 6);
+  const recent = bodyRows
+    .filter(r => {
+      const d = new Date(r.date);
+      return d >= cutoff && d <= target && r.weight_kg;
+    })
+    .map(r => Number(r.weight_kg));
+  recent.push(Number(currentWeight));
+  const avg = recent.reduce((a, b) => a + b, 0) / recent.length;
+  return Math.round(avg * 100) / 100;
+}
+
+// ---------- Dashboard 汇总 ----------
+
+function buildDashboard() {
+  const body = readSheet('Body_Log');
+  const sleep = readSheet('Sleep_Log');
+  const appetite = readSheet('Appetite_Log');
+  const beauty = readSheet('Beauty_Log');
+  const medical = readSheet('Medical_Log');
+
+  const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  const lastBody = body.length ? body[body.length - 1] : {};
+  const lastSleep = sleep.filter(r => r.date === today);
+  const todayAppetite = appetite.filter(r => r.date === today);
+  const lastBeauty = beauty.length ? beauty[beauty.length - 1] : {};
+  const lastMedical = medical.length ? medical[medical.length - 1] : {};
+
+  let appetitePeak = null;
+  todayAppetite.forEach(r => {
+    if (!appetitePeak || Number(r.intensity_0_10) > Number(appetitePeak.intensity_0_10)) {
+      appetitePeak = r;
     }
   });
-  container.addEventListener("input", e=>{
-    if(e.target.classList.contains("se-range")){
-      e.target.nextElementSibling.innerText = e.target.value;
-    }
-  });
-}
-function collectSideEffects(){
-  const parts = [];
-  document.querySelectorAll(".se-check:checked").forEach(chk=>{
-    const type = chk.dataset.type;
-    const range = document.querySelector('.se-range[data-type="'+type+'"]');
-    parts.push(type+":"+range.value);
-  });
-  return parts.join(",");
-}
-function saveMedical(){
-  const data = {
-    date: todayStr(),
-    dose_mg: document.getElementById("medDose").value,
-    site: document.getElementById("medSite").value,
-    side_effects: collectSideEffects(),
-    body_feel_note: document.getElementById("medNote").value
+
+  return {
+    date: today,
+    weight_kg: lastBody.weight_kg || null,
+    avg_weight_7d: lastBody.avg_weight_7d || null,
+    sleep_hours: lastSleep.length ? lastSleep[0].sleep_hours : null,
+    appetite_peak_0_10: appetitePeak ? appetitePeak.intensity_0_10 : null,
+    appetite_main_trigger: appetitePeak ? appetitePeak.trigger : null,
+    injection_day_offset: lastMedical.date ? computeInjectionDayOffset(today) : null,
+    beauty_trend_note: lastBeauty.skin_state_0_10 ? `皮肤 ${lastBeauty.skin_state_0_10}/10` : null
   };
-  postData("Medical_Log", data, privatePwd).then(r=>{
-    if(r.error){ alert(r.error); return; }
-    alert("已保存注射记录");
-    document.getElementById("medNote").value = "";
-  }).catch(()=>alert("保存失败"));
 }
-function saveHormone(){
-  const data = {
-    date: todayStr(),
-    status: document.getElementById("hormoneStatus").value,
-    reason: document.getElementById("hormoneReason").value,
-    note: document.getElementById("hormoneNote").value
-  };
-  postData("Hormone_Log", data, privatePwd).then(r=>{
-    if(r.error){ alert(r.error); return; }
-    alert("已保存记录");
-    document.getElementById("hormoneReason").value = "";
-    document.getElementById("hormoneNote").value = "";
-  }).catch(()=>alert("保存失败"));
+
+// ---------- 输出 ----------
+
+function jsonOutput(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }
-</script>
-</body>
-</html>
