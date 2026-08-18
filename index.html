@@ -7,18 +7,17 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
-  --navy:#1c3357;
-  --navy-deep:#132542;
-  --navy-soft:#e7ecf3;
-  --blue:#dfeefb;
-  --blue-text:#2f6fa3;
-  --green:#e3f3e8;
-  --green-text:#3f8b5c;
-  --bg:#f2f4f7;
+  --page-bg:#0f2143;
   --card:#ffffff;
   --text:#1a2233;
   --sub:#8992a3;
   --line:#e6e9ef;
+  --navy:#1c3357;
+  --blue:#dfeefb;
+  --blue-text:#2f6fa3;
+  --blue-bright:#8fd0ff;
+  --green:#e3f3e8;
+  --green-text:#3f8b5c;
   --danger:#c65a4f;
   --radius:16px;
   --nav-h:68px;
@@ -30,14 +29,14 @@ body{
   margin:0;
   padding-bottom:calc(var(--nav-h) + 34px + env(safe-area-inset-bottom));
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
-  background:var(--bg);
+  background:var(--page-bg);
   color:var(--text);
   -webkit-font-smoothing:antialiased;
   -webkit-overflow-scrolling:touch;
 }
 .header{padding:26px 20px 14px;}
-.header h1{margin:0;font-size:19px;font-weight:700;color:var(--navy);letter-spacing:.2px;}
-.header p{color:var(--sub);margin:4px 0 0;font-size:12px;letter-spacing:.4px;text-transform:uppercase;}
+.header h1{margin:0;font-size:19px;font-weight:700;color:#f3f7fc;letter-spacing:.2px;}
+.header p{color:rgba(255,255,255,.55);margin:4px 0 0;font-size:12px;letter-spacing:.4px;text-transform:uppercase;}
 
 .page{display:none;padding:0 16px;max-width:520px;margin:0 auto;}
 .page.active{display:block;}
@@ -51,13 +50,12 @@ body{
 }
 .card h2{margin:0 0 4px;font-size:17px;font-weight:700;color:var(--navy);}
 
-.hero{background:var(--navy);border:none;}
-.hero h2{color:#fff;}
+.hero{background:linear-gradient(135deg,#ffffff,#eaf3fb);border:none;}
 .hero .hero-top{display:flex;justify-content:space-between;align-items:flex-start;}
-.hero-date{color:rgba(255,255,255,.6);font-size:12.5px;margin-top:2px;}
+.hero-date{color:var(--sub);font-size:12.5px;margin-top:2px;}
 .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;}
-.hero-stat-label{font-size:11.5px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.4px;}
-.hero-stat-value{font-size:26px;font-weight:700;margin-top:4px;color:#fff;}
+.hero-stat-label{font-size:11.5px;color:var(--sub);text-transform:uppercase;letter-spacing:.4px;}
+.hero-stat-value{font-size:26px;font-weight:700;margin-top:4px;color:var(--navy);}
 
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .stat-card{padding-bottom:16px;}
@@ -100,6 +98,7 @@ input,select,textarea{
 }
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--navy);background:#fff;}
 textarea{height:74px;resize:none;}
+input[type=file]{padding:10px;font-size:13px;}
 
 input[type=range]{accent-color:var(--navy);padding:0;margin-top:8px;height:4px;}
 .range-val{font-weight:700;color:var(--navy);font-size:12.5px;}
@@ -125,12 +124,14 @@ button{
 }
 .tag.active{background:var(--navy);color:#fff;}
 
+.photo-preview{width:100%;border-radius:12px;margin-top:10px;display:block;max-height:220px;object-fit:cover;}
+
 .fab{
   position:fixed;right:18px;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom));
   width:54px;height:54px;border-radius:50%;
-  background:var(--navy);color:#fff;
+  background:var(--blue-bright);color:var(--navy);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 8px 20px rgba(28,51,87,.35);
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
   z-index:20;border:none;cursor:pointer;
 }
 .fab svg{width:24px;height:24px;}
@@ -138,20 +139,20 @@ button{
 nav{
   position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
   padding-bottom:env(safe-area-inset-bottom);
-  background:#ffffff;
-  border-top:1px solid var(--line);
+  background:var(--page-bg);
+  border-top:1px solid rgba(255,255,255,.08);
   display:flex;justify-content:space-around;align-items:center;
   z-index:30;
 }
 nav button{
   background:none;
   display:flex;flex-direction:column;align-items:center;gap:4px;
-  color:var(--sub);padding:6px 10px;
+  color:rgba(255,255,255,.45);padding:6px 10px;
 }
 nav button svg{width:21px;height:21px;}
 nav button span{font-size:10px;letter-spacing:.2px;}
-nav button.active{color:var(--navy);}
-nav button.active svg{color:var(--navy);}
+nav button.active{color:var(--blue-bright);}
+nav button.active svg{color:var(--blue-bright);}
 
 .hidden{display:none;}
 .checkbox-row{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:13.5px;}
@@ -160,7 +161,6 @@ nav button.active svg{color:var(--navy);}
 
 .empty-note{color:var(--sub);font-size:13px;line-height:1.5;}
 .lock-icon{width:26px;height:26px;color:var(--blue-text);margin-bottom:10px;}
-.badge-green{display:inline-block;background:var(--green);color:var(--green-text);font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;margin-left:6px;}
 </style>
 </head>
 <body>
@@ -347,6 +347,9 @@ nav button.active svg{color:var(--navy);}
     <input type="range" id="chinAcne" min="0" max="10" value="5" oninput="syncVal('chinAcne','chinAcneVal')">
     <label>皮肤整体状态 <span class="range-val" id="skinStateVal">5</span></label>
     <input type="range" id="skinState" min="0" max="10" value="5" oninput="syncVal('skinState','skinStateVal')">
+    <label style="margin-top:18px;">发缝照片（可选）</label>
+    <input type="file" id="hairPhotoInput" accept="image/*">
+    <img id="hairPhotoPreview" class="photo-preview hidden">
   </div>
   <div class="card">
     <div class="section-title">Shopping Log（可选）</div>
@@ -432,6 +435,7 @@ nav button.active svg{color:var(--navy);}
 const API_URL = "https://script.google.com/macros/s/AKfycbwyKGdAA3KrflVj-41MlfAEqZTfdehhZGNUFfTeNDecMd3wavntnPA7LSjb_nrEeVOiYg/exec";
 let privatePwd = "";
 let weightChart = null;
+let hairPhotoBase64 = null;
 
 function showPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -444,6 +448,9 @@ function showPage(id){
 window.onload = function(){
   showPage("home");
   buildSideEffectList();
+  document.getElementById("hairPhotoInput").addEventListener("change", function(){
+    compressAndPreview(this, "hairPhotoPreview", function(compressed){ hairPhotoBase64 = compressed; });
+  });
 };
 
 function syncVal(inputId, valId){
@@ -460,6 +467,31 @@ function todayStr(){ return new Date().toISOString().substring(0,10); }
 function nowTimeStr(){
   const d = new Date();
   return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+}
+
+function compressAndPreview(input, previewId, callback){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const maxW = 900;
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const compressed = canvas.toDataURL("image/jpeg", 0.75);
+      const previewEl = document.getElementById(previewId);
+      previewEl.src = compressed;
+      previewEl.classList.remove("hidden");
+      callback(compressed);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
 function postData(sheet, data, pwd){
@@ -576,9 +608,13 @@ function saveBeauty(){
     shopping_price: document.getElementById("shopPrice").value,
     style_tag: document.getElementById("styleTag").value
   };
+  if(hairPhotoBase64) data.photo_base64 = hairPhotoBase64;
   postData("Beauty_Log", data).then(r=>{
     if(r.error){ alert(r.error); return; }
     alert("已保存本周记录");
+    hairPhotoBase64 = null;
+    document.getElementById("hairPhotoInput").value = "";
+    document.getElementById("hairPhotoPreview").classList.add("hidden");
   }).catch(()=>alert("保存失败"));
 }
 
