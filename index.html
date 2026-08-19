@@ -239,14 +239,16 @@ nav button.active svg{color:var(--blue-bright);}
     <p class="empty-note" style="margin:4px 0 0;">随时记录，越快越好，不用等到"吃完"再补。</p>
     <label>现在时间</label>
     <input id="appTime" type="time">
-    <label>地点</label>
-    <select id="appLocation">
-      <option>公司</option><option>家</option><option>外出</option><option>社交</option>
-    </select>
+    <label>地点 <span class="empty-note" style="font-size:11px;">（可点选或自输）</span></label>
+    <input id="appLocation" list="locList" placeholder="点选或输入">
+    <datalist id="locList">
+      <option value="公司"><option value="家"><option value="外出"><option value="社交">
+    </datalist>
     <label>发生场景</label>
-    <select id="appContext">
-      <option>早餐后</option><option>上午工作</option><option>午后</option><option>晚上</option><option>看到食物</option>
-    </select>
+    <input id="appContext" list="ctxList" placeholder="点选或输入">
+    <datalist id="ctxList">
+      <option value="早餐后"><option value="上午工作"><option value="午后"><option value="晚上"><option value="看到食物">
+    </datalist>
   </div>
 
   <div class="card">
@@ -262,13 +264,15 @@ nav button.active svg{color:var(--blue-bright);}
     <label>欲望强度 <span class="range-val" id="urgeVal">8</span></label>
     <input type="range" id="appIntensity" min="0" max="10" value="8" oninput="syncVal('appIntensity','urgeVal')">
     <label>我想吃什么</label>
-    <select id="appWant">
-      <option>甜食</option><option>冰的</option><option>奶味</option><option>咸零食</option><option>正餐</option>
-    </select>
+    <input id="appWant" list="wantList" placeholder="点选或输入">
+    <datalist id="wantList">
+      <option value="甜食"><option value="冰的"><option value="奶味"><option value="咸零食"><option value="正餐">
+    </datalist>
     <label>为什么想吃</label>
-    <select id="appTrigger">
-      <option>看到食物</option><option>压力</option><option>疲劳</option><option>无聊</option><option>奖励自己</option><option>真的饿</option>
-    </select>
+    <input id="appTrigger" list="trigList" placeholder="点选或输入">
+    <datalist id="trigList">
+      <option value="看到食物"><option value="压力"><option value="疲劳"><option value="无聊"><option value="奖励自己"><option value="真的饿">
+    </datalist>
   </div>
 
   <div class="card">
@@ -278,12 +282,15 @@ nav button.active svg{color:var(--blue-bright);}
       <option>忍住了</option><option>吃了一点</option><option>正常吃</option><option>吃多了</option>
     </select>
     <label>吃完身体感觉</label>
-    <select id="bodyAfter">
-      <option>舒服</option><option>正常</option><option>胃胀</option><option>恶心</option><option>后悔</option>
-    </select>
+    <input id="bodyAfter" list="bodyList" placeholder="点选或输入">
+    <datalist id="bodyList">
+      <option value="舒服"><option value="正常"><option value="胃胀"><option value="恶心"><option value="后悔">
+    </datalist>
+    <textarea id="apNote" placeholder="备注（可选）" style="margin-top:16px;"></textarea>
     <button class="save" onclick="saveAppetite()">记录这一次</button>
   </div>
 </section>
+
 
 <!-- ===================== Daily ===================== -->
 <section id="daily" class="page">
@@ -556,13 +563,16 @@ function saveAppetite(){
     trigger: document.getElementById("appTrigger").value,
     action: document.getElementById("appAction").value,
     body_feeling_after: document.getElementById("bodyAfter").value,
-    note: ""
+    note: document.getElementById("apNote").value
   };
   postData("Appetite_Log", data).then(r=>{
     if(r.error){ alert(r.error); return; }
     alert("已记录");
+    document.getElementById("apNote").value = "";
   }).catch(()=>alert("保存失败，请检查网络"));
 }
+
+
 
 function saveFood(){
   const data = {
