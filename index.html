@@ -231,65 +231,389 @@ nav button.active svg{color:var(--blue-bright);}
   </div>
 </section>
 
-<!-- ===================== Appetite ===================== -->
-<section id="appetite" class="page">
-  <div class="card">
-    <h2>现在，想吃点什么？</h2>
-    <p class="empty-note" style="margin:4px 0 0;">随时记录，越快越好，不用等到"吃完"再补。</p>
-  </div>
+<!-- ======================
+ Appetite Event
+====================== -->
 
-  <div class="card">
-    <div class="section-title">身体状态</div>
-    <label>饥饿感 <span class="range-val" id="apHungerVal">5</span></label>
-    <input type="range" id="apHunger" min="0" max="10" value="5" oninput="syncVal('apHunger','apHungerVal')">
-    <label>疲劳 <span class="range-val" id="apFatigueVal">5</span></label>
-    <input type="range" id="apFatigue" min="0" max="10" value="5" oninput="syncVal('apFatigue','apFatigueVal')">
-    <label>压力 <span class="range-val" id="apStressVal">5</span></label>
-    <input type="range" id="apStress" min="0" max="10" value="5" oninput="syncVal('apStress','apStressVal')">
-  </div>
 
-  <div class="card">
-    <div class="section-title">想吃什么类型（可多选）</div>
-    <div id="apWantTypeTags">
-      <span class="tag" data-val="甜">甜</span>
-      <span class="tag" data-val="咸">咸</span>
-      <span class="tag" data-val="冰">冰</span>
-      <span class="tag" data-val="奶">奶</span>
-      <span class="tag" data-val="正餐">正餐</span>
-    </div>
-    <label style="margin-top:18px;">想吃强度 <span class="range-val" id="apIntensityVal">5</span></label>
-    <input type="range" id="apIntensity" min="0" max="10" value="5" oninput="syncVal('apIntensity','apIntensityVal')">
-  </div>
+<div class="card">
 
-  <div class="card">
-    <div class="section-title">触发原因（可多选）</div>
-    <div id="apTriggerTags">
-      <span class="tag" data-val="真的饿">真的饿</span>
-      <span class="tag" data-val="工作压力">工作压力</span>
-      <span class="tag" data-val="疲劳">疲劳</span>
-      <span class="tag" data-val="无聊">无聊</span>
-      <span class="tag" data-val="奖励自己">奖励自己</span>
-      <span class="tag" data-val="看到食物">看到食物</span>
-      <span class="tag" data-val="习惯">习惯</span>
-    </div>
-  </div>
+<h2>
+🍦 我现在想吃东西
+</h2>
 
-  <div class="card">
-    <div class="section-title">最终行为</div>
-    <select id="apAction">
-      <option>没有吃</option>
-      <option>吃了一点</option>
-      <option>正常吃</option>
-      <option>暴食</option>
-    </select>
-    <label>满足感 <span class="range-val" id="apSatisVal">5</span></label>
-    <input type="range" id="apSatis" min="0" max="10" value="5" oninput="syncVal('apSatis','apSatisVal')">
-    <label>后悔感 <span class="range-val" id="apRegretVal">5</span></label>
-    <input type="range" id="apRegret" min="0" max="10" value="5" oninput="syncVal('apRegret','apRegretVal')">
-    <textarea id="apNote" placeholder="备注（可选）" style="margin-top:16px;"></textarea>
-    <button class="save" onclick="saveAppetite()">保存这次记录</button>
-  </div>
-</section>
+
+<label>
+现在时间
+</label>
+
+<input
+id="appTime"
+type="time">
+
+
+<label>
+地点
+</label>
+
+<select id="appLocation">
+
+<option>公司</option>
+
+<option>家</option>
+
+<option>外出</option>
+
+<option>社交</option>
+
+</select>
+
+
+
+<label>
+发生场景
+</label>
+
+
+<select id="appContext">
+
+
+<option>
+早餐后
+</option>
+
+
+<option>
+上午工作
+</option>
+
+
+<option>
+午后
+</option>
+
+
+<option>
+晚上
+</option>
+
+
+<option>
+看到食物
+</option>
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+身体真的饿吗？
+</h3>
+
+
+<div>
+饥饿程度：
+<span id="hungerValue">
+3
+</span>
+/10
+
+</div>
+
+
+<input
+id="appHunger"
+type="range"
+min="0"
+max="10"
+value="3"
+oninput="
+hungerValue.innerText=this.value
+">
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+我有多想吃？
+</h3>
+
+
+<div>
+
+欲望强度：
+
+<span id="urgeValue">
+8
+</span>
+
+/10
+
+</div>
+
+
+<input
+id="appIntensity"
+type="range"
+min="0"
+max="10"
+value="8"
+oninput="
+urgeValue.innerText=this.value
+">
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+为什么想吃？
+</h3>
+
+
+<select id="appTrigger">
+
+
+<option>
+看到食物
+</option>
+
+
+<option>
+压力
+</option>
+
+
+<option>
+疲劳
+</option>
+
+
+<option>
+无聊
+</option>
+
+
+<option>
+奖励自己
+</option>
+
+
+<option>
+真的饿
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+我想吃什么？
+</h3>
+
+
+<select id="appWant">
+
+
+<option>
+甜食
+</option>
+
+
+<option>
+冰的
+</option>
+
+
+<option>
+奶味
+</option>
+
+
+<option>
+咸零食
+</option>
+
+
+<option>
+正餐
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+最后发生了什么？
+</h3>
+
+
+<select id="appAction">
+
+
+<option>
+忍住了
+</option>
+
+
+<option>
+吃了一点
+</option>
+
+
+<option>
+正常吃
+</option>
+
+
+<option>
+吃多了
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+吃完身体感觉
+</h3>
+
+
+<select id="bodyAfter">
+
+
+<option>
+舒服
+</option>
+
+
+<option>
+正常
+</option>
+
+
+<option>
+胃胀
+</option>
+
+
+<option>
+恶心
+</option>
+
+
+<option>
+后悔
+</option>
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+Food Noise（脑子想吃程度）
+</h3>
+
+
+<input
+id="foodNoise"
+type="range"
+min="0"
+max="10"
+value="8">
+
+
+</div>
+
+
+
+
+
+<button
+class="save"
+onclick="saveAppetite()">
+
+记录这一次
+
+</button>
+
+
 
 <!-- ===================== Daily ===================== -->
 <section id="daily" class="page">
@@ -539,25 +863,88 @@ function loadAiCoach(){
 }
 
 function saveAppetite(){
-  const data = {
-    date: todayStr(), time: nowTimeStr(),
-    hunger_0_10: document.getElementById("apHunger").value,
-    fatigue_0_10: document.getElementById("apFatigue").value,
-    stress_0_10: document.getElementById("apStress").value,
-    want_type: collectTags("apWantTypeTags"),
-    intensity_0_10: document.getElementById("apIntensity").value,
-    trigger: collectTags("apTriggerTags"),
-    action: document.getElementById("apAction").value,
-    satisfaction_0_10: document.getElementById("apSatis").value,
-    regret_0_10: document.getElementById("apRegret").value,
-    note: document.getElementById("apNote").value
-  };
-  postData("Appetite_Log", data).then(r=>{
-    if(r.error){ alert(r.error); return; }
-    alert("已记录");
-    document.getElementById("apNote").value = "";
-    document.querySelectorAll("#apWantTypeTags .tag, #apTriggerTags .tag").forEach(t=>t.classList.remove("active"));
-  }).catch(()=>alert("保存失败，请检查网络"));
+
+const data = {
+
+date:
+todayStr(),
+
+time:
+document.getElementById("appTime").value
+||
+nowTimeStr(),
+
+
+location:
+document.getElementById("appLocation").value,
+
+
+meal_context:
+document.getElementById("appContext").value,
+
+
+hunger_0_10:
+document.getElementById("appHunger").value,
+
+
+intensity_0_10:
+document.getElementById("appIntensity").value,
+
+
+food_noise_before:
+document.getElementById("foodNoise").value,
+
+
+want_type:
+document.getElementById("appWant").value,
+
+
+trigger:
+document.getElementById("appTrigger").value,
+
+
+action:
+document.getElementById("appAction").value,
+
+
+body_feeling_after:
+document.getElementById("bodyAfter").value,
+
+
+note:
+""
+
+};
+
+
+
+postData(
+"Appetite_Log",
+data
+)
+.then(r=>{
+
+
+if(r.error){
+
+alert(r.error);
+
+return;
+
+}
+
+
+alert("已记录");
+
+
+})
+.catch(()=>{
+
+alert("保存失败，请检查网络");
+
+});
+
+
 }
 
 function saveFood(){
